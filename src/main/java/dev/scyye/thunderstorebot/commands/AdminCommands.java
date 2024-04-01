@@ -1,9 +1,8 @@
 package dev.scyye.thunderstorebot.commands;
-
+/*
 import com.github.kaktushose.jda.commands.annotations.interactions.*;
 import com.github.kaktushose.jda.commands.dispatching.interactions.commands.CommandEvent;
 import com.google.gson.GsonBuilder;
-import dev.scyye.botcommons.config.ServerConfig;
 import dev.scyye.thunderstoreapi.api.entities.community.Community;
 import dev.scyye.thunderstorebot.Bot;
 import dev.scyye.thunderstorebot.utils.Utils;
@@ -19,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-/*
+
 @Interaction
 public class AdminCommands {
 	@SlashCommand(value = "admin disable-channel", ephemeral = true, enabledFor = Permission.MANAGE_SERVER)

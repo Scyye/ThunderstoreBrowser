@@ -1,31 +1,26 @@
 package dev.scyye.thunderstorebot;
 
-import com.github.kaktushose.jda.commands.JDACommands;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import dev.scyye.botcommons.commands.CommandManager;
 import dev.scyye.botcommons.config.Config;
-import dev.scyye.botcommons.config.ServerConfig;
-import dev.scyye.botcommons.menu.PaginationListener;
+import dev.scyye.botcommons.config.ConfigManager;
+import dev.scyye.botcommons.menu.MenuManager;
 import dev.scyye.thunderstoreapi.api.TSJA;
 import dev.scyye.thunderstoreapi.api.TSJABuilder;
-import dev.scyye.thunderstorebot.commands.APICommands;
+import dev.scyye.thunderstorebot.command.impl.*;
 import dev.scyye.thunderstorebot.utils.SuggestionListener;
 import dev.scyye.thunderstorebot.versions.Version;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
 
 public class Bot extends ListenerAdapter {
     public static Bot bot;
@@ -36,6 +31,7 @@ public class Bot extends ListenerAdapter {
     Config config;
 
     private Bot() {
+        Config.botName="thunderstorebot";
         config = Config.makeConfig(new HashMap<>(){{
             put("token", "TOKEN");
         }}, "thunderstorebot");
@@ -45,18 +41,67 @@ public class Bot extends ListenerAdapter {
                 .build();
         jda = JDABuilder.createDefault(config.get("token"))
                 .setActivity(Activity.customStatus("DM suggestions to me!"))
-                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                .addEventListeners(new SuggestionListener(), this)
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
+                .addEventListeners(new SuggestionListener(), this, new CommandManager())
                 .build();
 
-        jda.addEventListener(new PaginationListener(jda));
+        jda.addEventListener(new MenuManager(jda));
+        jda.addEventListener(new ConfigManager(new HashMap<>(){{
+            put("prefix", "!");
+            put("disabledChannels", "[]");
+            put("disabledUsers", "[]");
+            put("moderatorRoles", "[]");
+            put("community", "");
+        }}));
+
+        MenuManager.registerMenu(new PackageSearchCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
+                new CommunityListCommand(), new MiscCommands.ChangelogCommand());
+        CommandManager.addCommands(new PackageSearchCommand(), new PackageInfoCommand(), new LogParseCommand(),
+                new LogParseCommand.PluginList(), new CommunityListCommand(), new CommunityInfoCommand(),
+                new MiscCommands.PingCommand(), new MiscCommands.EchoCommand(), new MiscCommands.ChangelogCommand(),
+                new MiscCommands.HelpCommand(), new MiscCommands.VersionCommand(), new MiscCommands.CreditsCommand(),
+                new MiscCommands.InviteCommand());
+    }
+
+    @Override
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
+        event.getJDA().retrieveUserById(event.getMessageAuthorId()).queue(user -> {
+
+
+            if (!event.getUserId().equals("553652308295155723"))
+                return;
+
+            if (event.getReaction().getEmoji().asUnicode().equals(Emoji.fromUnicode("U+274C"))) {
+                if (!user.isBot() && !event.getUserId().equals("553652308295155723"))
+                    return;
+                event.getChannel().deleteMessageById(event.getMessageId()).queue();
+            }
+            // if its a pin emoji, pin the message
+            System.out.println(event.getReaction().getEmoji().getName());
+            if (event.getReaction().getEmoji().getName().contains("\uD83D\uDCCC")) {
+                System.out.println("2");
+                event.getChannel().retrievePinnedMessages().queue(messages -> {
+                    if (messages.stream().map(Message::getId).toList().contains(event.getMessageId())) {
+                        event.getChannel().unpinMessageById(event.getMessageId()).queue();
+                        System.out.println("Unpinned message");
+                    } else {
+                        event.getChannel().pinMessageById(event.getMessageId()).queue();
+                        System.out.println("Pinned message");
+                    }
+                });
+            }
+        });
+    }
+
+
+    @Override
+    public void onGuildReady(@NotNull GuildReadyEvent event) {
+        System.out.println("Ready in " + event.getGuild().getName());
     }
 
     public static void main(String[] args) {
         bot = new Bot();
-        JDACommands.start(bot.jda, bot.getClass(), APICommands.class.getPackageName());
-
-
+        //JDACommands.start(bot.jda, bot.getClass(), APICommands.class.getPackageName());
 
         new Version("23-10-2023", "1.0.0", """
                 * Created bot
@@ -95,17 +140,10 @@ public class Bot extends ListenerAdapter {
         new Version("25-11-2023", "1.0.5", """
                 * Bot is back online!
                 """, true);
-    }
-
-    @Override
-    public void onGuildReady(@NotNull GuildReadyEvent event) {
-        ServerConfig.createConfig("thunderstorebot", event.getGuild().getId(),
-                new HashMap<>(){{
-                    put("disabledChannels", new String[]{});
-                    put("disabledUsers", new String[]{});
-                    put("moderatorRoles", new String[]{});
-                    put("community", "");
-                }});
-
+        new Version("1-4-2024", "1.1.0", """
+                * Changed command framework
+                * Added more commands
+                * Changed the way package-search works
+                """, true);
     }
 }
