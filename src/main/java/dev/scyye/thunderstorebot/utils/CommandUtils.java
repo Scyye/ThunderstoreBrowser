@@ -3,7 +3,6 @@ package dev.scyye.thunderstorebot.utils;
 import com.google.gson.Gson;
 import dev.scyye.botcommons.commands.GenericCommandEvent;
 import dev.scyye.botcommons.config.GuildConfig;
-import dev.scyye.thunderstoreapi.api.entities.community.Community;
 import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
@@ -27,8 +26,10 @@ public class CommandUtils {
 	}
 
 	public static boolean validateCommunity(GenericCommandEvent event, String community) {
-		if (community == null || community.isEmpty())
+		if (community == null || community.isEmpty()) {
 			event.reply("No community provided. How did you even get here?");
+			return true;
+		}
 
 		community = MarkdownSanitizer.sanitize(community.toLowerCase().replace(" ", "-"));
 
@@ -49,7 +50,7 @@ public class CommandUtils {
 		if (!success)
 			event.reply("Invalid Community. Do `/community all` for a list of valid communities.");
 
-		return success;
+		return !success;
 	}
 
 	public static String sanitizeAndReplace(String input) {

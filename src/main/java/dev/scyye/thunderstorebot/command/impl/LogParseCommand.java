@@ -6,7 +6,6 @@ import dev.scyye.botcommons.commands.GenericCommandEvent;
 import dev.scyye.botcommons.commands.ICommand;
 import dev.scyye.botcommons.menu.Menu;
 import dev.scyye.botcommons.menu.impl.PageMenu;
-import dev.scyye.thunderstorebot.utils.CommandUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.OptionType;

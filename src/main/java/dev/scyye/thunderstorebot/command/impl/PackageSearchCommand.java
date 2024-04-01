@@ -49,7 +49,7 @@ public class PackageSearchCommand implements ICommand {
 
 			search = sanitizeAndReplace(search);
 
-			if (!validateCommunity(event, community))
+			if (validateCommunity(event, community))
 				return;
 
 			community = community.toLowerCase().replace(" ", "-");

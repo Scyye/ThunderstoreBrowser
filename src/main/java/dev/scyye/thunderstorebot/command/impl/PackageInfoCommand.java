@@ -42,7 +42,7 @@ public class PackageInfoCommand implements ICommand {
 			return;
 		}
 
-		if (!CommandUtils.validateCommunity(event, community))
+		if (CommandUtils.validateCommunity(event, community))
 			return;
 
 		PackageListing _package = null;
