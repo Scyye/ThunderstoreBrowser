@@ -4,8 +4,10 @@ import dev.scyye.botcommons.commands.CommandManager;
 import dev.scyye.botcommons.config.Config;
 import dev.scyye.botcommons.config.ConfigManager;
 import dev.scyye.botcommons.menu.MenuManager;
+import dev.scyye.botcommons.menu.impl.HelpMenu;
 import dev.scyye.thunderstoreapi.api.TSJA;
 import dev.scyye.thunderstoreapi.api.TSJABuilder;
+import dev.scyye.thunderstorebot.cache.CacheCollector;
 import dev.scyye.thunderstorebot.command.impl.*;
 import dev.scyye.thunderstorebot.utils.SuggestionListener;
 import dev.scyye.thunderstorebot.versions.Version;
@@ -18,9 +20,12 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import okhttp3.internal.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Bot extends ListenerAdapter {
     public static Bot bot;
@@ -34,7 +39,7 @@ public class Bot extends ListenerAdapter {
         Config.botName="thunderstorebot";
         config = Config.makeConfig(new HashMap<>(){{
             put("token", "TOKEN");
-        }}, "thunderstorebot");
+        }});
 
         tsja = new TSJABuilder()
                 .setUpdateCacheTime(10000)
@@ -54,20 +59,20 @@ public class Bot extends ListenerAdapter {
             put("community", "");
         }}));
 
-        MenuManager.registerMenu(new PackageSearchCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
-                new CommunityListCommand(), new MiscCommands.ChangelogCommand());
-        CommandManager.addCommands(new PackageSearchCommand(), new PackageInfoCommand(), new LogParseCommand(),
-                new LogParseCommand.PluginList(), new CommunityListCommand(), new CommunityInfoCommand(),
+        CommandManager.addSubcommands(new PackageCommand(), new PackageCommand.PackageInfoCommand(), new PackageCommand.PackageSearchCommand());
+        CommandManager.addSubcommands(new CommunityCommand(), new CommunityCommand.CommunityInfoCommand(), new CommunityCommand.CommunityListCommand());
+        MenuManager.registerMenu(new PackageCommand.PackageSearchCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
+                new CommunityCommand.CommunityListCommand(), new MiscCommands.ChangelogCommand(), new HelpMenu());
+        CommandManager.addCommands(new LogParseCommand(), new AddInviteCommand(),
+                new LogParseCommand.PluginList(),
                 new MiscCommands.PingCommand(), new MiscCommands.EchoCommand(), new MiscCommands.ChangelogCommand(),
-                new MiscCommands.HelpCommand(), new MiscCommands.VersionCommand(), new MiscCommands.CreditsCommand(),
-                new MiscCommands.InviteCommand());
+                new MiscCommands.VersionCommand(), new MiscCommands.CreditsCommand(), new MiscCommands.InviteCommand(),
+                new HelpMenu());
     }
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         event.getJDA().retrieveUserById(event.getMessageAuthorId()).queue(user -> {
-
-
             if (!event.getUserId().equals("553652308295155723"))
                 return;
 
@@ -102,6 +107,19 @@ public class Bot extends ListenerAdapter {
     public static void main(String[] args) {
         bot = new Bot();
         //JDACommands.start(bot.jda, bot.getClass(), APICommands.class.getPackageName());
+
+        Timer timer = new Timer();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                CacheCollector.init();
+            }
+        };
+
+        // Every 20 minutes, update the cache
+        timer.schedule(task, 1000 * 60 * 20, 1000 * 60 * 2);
+        CacheCollector.init();
 
         new Version("23-10-2023", "1.0.0", """
                 * Created bot
@@ -145,5 +163,13 @@ public class Bot extends ListenerAdapter {
                 * Added more commands
                 * Changed the way package-search works
                 """, true);
+        new Version("14-4-2024", "1.1.1", """
+                * Added caching, allowing for faster autocomplete
+                * Changed package-info, and package-search to subcommands of `package`
+                """, true);
+        new Version("23-4-2024", "1.1.2", """
+                * Security updates (thanks <@429810730691461130>
+                * Changed community-info and community-list to subcommands of `community`
+                """ , true);
     }
 }

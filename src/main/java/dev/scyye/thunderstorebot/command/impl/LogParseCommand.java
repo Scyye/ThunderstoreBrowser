@@ -22,16 +22,7 @@ import java.util.UUID;
 public class LogParseCommand implements ICommand {
 	@Override
 	public void handle(GenericCommandEvent event) {
-		Message.Attachment attachment = event.getArg("attachment", Message.Attachment.class);
-		// Get all files from the message
-		if (attachment==null || !attachment.getFileName().toLowerCase().contains("output")) {
-			event.reply("Please attach a valid LogOutput file.");
-			return;
-		}
-
-		File file = attachment.getProxy().downloadToFile(new File(STR."logs\\\{UUID.randomUUID()}.log")).join();
-
-		FileInfo fileInfo = getFileInfo(file);
+		FileInfo fileInfo = get(event);
 
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setTitle(STR."\{fileInfo.gameName} - BepInEx v\{fileInfo.bepInVersion}")
@@ -54,6 +45,17 @@ public class LogParseCommand implements ICommand {
 		};
 	}
 
+	static FileInfo get(GenericCommandEvent event) {
+		Message.Attachment attachment = event.getArg("attachment", Message.Attachment.class);
+		// Get all files from the message
+		if (attachment==null || !attachment.getFileName().toLowerCase().contains("output")) {
+			event.reply("Please attach a valid LogOutput file.");
+			return null;
+		}
+
+		return getFileInfo(attachment.getProxy().downloadToFile(new File(STR."logs\\\{UUID.randomUUID()}.log")).join());
+	}
+
 	@Command(name="pluginlist", help = "List all plugins")
 	@Menu(id = "plugin-list")
 	public static class PluginList extends PageMenu implements ICommand {
@@ -67,18 +69,7 @@ public class LogParseCommand implements ICommand {
 
 		@Override
 		public void handle(GenericCommandEvent event) {
-			event.deferReply();
-			Message.Attachment attachment = event.getArg("attachment", Message.Attachment.class);
-			if (attachment==null || !attachment.getFileName().toLowerCase().contains("output")) {
-				event.reply("Please attach a valid LogOutput file.");
-				return;
-			}
-
-			File file = attachment.getProxy().downloadToFile(new File(STR."logs\\\{UUID.randomUUID()}.log")).join();
-
-			FileInfo fileInfo = getFileInfo(file);
-
-			event.replyMenu("plugin-list", fileInfo);
+			event.replyMenu("plugin-list", get(event));
 		}
 
 		@Override

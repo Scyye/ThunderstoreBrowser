@@ -9,4 +9,15 @@ public class Utils {
 		}
 		return false;
 	}
+
+	public static boolean looseEquals(String s1, String s2) {
+		// Simply test if s1 contains the characters of s2 in order, whether they are separated by other characters or not
+		if (s1.length() < s2.length()) return false;
+		int i = 0;
+		for (var c : s1.toCharArray()) {
+			if (c == s2.charAt(i)) i++;
+			if (i == s2.length()) return true;
+		}
+		return false;
+	}
 }

@@ -31,7 +31,7 @@ public class MiscCommands {
 	public static class EchoCommand implements ICommand {
 		@Override
 		public void handle(GenericCommandEvent event) {
-			event.getChannel().sendMessage(event.getArg(0, String.class)).queue();
+			event.getChannel().sendMessage(event.getArg("message", String.class)).queue();
 			event.replyEphemeral("Success");
 		}
 
@@ -48,6 +48,7 @@ public class MiscCommands {
 	public static class ChangelogCommand extends PageMenu implements ICommand {
 		@Override
 		public void handle(GenericCommandEvent event) {
+			event.deferReply();
 			event.replyMenu("changelog");
 		}
 
