@@ -1,8 +1,8 @@
 package dev.scyye.thunderstorebot.utils;
 
+import botcommons.commands.GenericCommandEvent;
+import botcommons.config.GuildConfig;
 import com.google.gson.Gson;
-import dev.scyye.botcommons.commands.GenericCommandEvent;
-import dev.scyye.botcommons.config.GuildConfig;
 import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
@@ -20,7 +20,7 @@ public class CommandUtils {
 	public static boolean checkExecute(GenericCommandEvent event, Predicate<GenericCommandEvent> predicate) {
 		if (predicate.test(event))
 			return true;
-		event.reply("You do not have permission to use this command. " +
+		event.replyError("You do not have permission to use this command. " +
 				"If you believe this is an error, please contact this server's staff, or <@553652308295155723>");
 		return false;
 	}

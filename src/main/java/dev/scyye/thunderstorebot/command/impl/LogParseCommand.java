@@ -1,11 +1,11 @@
 package dev.scyye.thunderstorebot.command.impl;
 
-import dev.scyye.botcommons.commands.Command;
-import dev.scyye.botcommons.commands.CommandInfo;
-import dev.scyye.botcommons.commands.GenericCommandEvent;
-import dev.scyye.botcommons.commands.ICommand;
-import dev.scyye.botcommons.menu.Menu;
-import dev.scyye.botcommons.menu.impl.PageMenu;
+import botcommons.commands.Command;
+import botcommons.commands.CommandHolder;
+import botcommons.commands.GenericCommandEvent;
+import botcommons.commands.Param;
+import botcommons.menu.Menu;
+import botcommons.menu.types.PageMenu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -18,11 +18,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-@Command(name = "logparse", help = "Parses a log file")
-public class LogParseCommand implements ICommand {
-	@Override
-	public void handle(GenericCommandEvent event) {
-		FileInfo fileInfo = get(event);
+@CommandHolder(group = "logparse")
+public class LogParseCommand {
+	@Command(name = "parseinfo", help = "Parses a log file")
+	public static void parseInfo(GenericCommandEvent event,
+								 @Param(description = "The log file to parse") Message.Attachment attachment) {
+		FileInfo fileInfo = get(event, attachment);
 
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setTitle(STR."\{fileInfo.gameName} - BepInEx v\{fileInfo.bepInVersion}")
@@ -33,50 +34,35 @@ public class LogParseCommand implements ICommand {
 		for (var e : fileInfo.uniqueErrors) {
 			embedBuilder.addField("Error", e, false);
 		}
-		embedBuilder.setDescription("Use /pluginlist to see all plugins");
+		embedBuilder.setDescription("Use /logparse pluginlist to see all plugins");
 
-		event.replyEmbed(embedBuilder);
+		event.replyEmbed(embedBuilder).finish();
 	}
 
-	@Override
-	public CommandInfo.Option[] getArguments() {
-		return new CommandInfo.Option[]{
-			CommandInfo.Option.required("attachment", "The attachment to parse", OptionType.ATTACHMENT, false)
-		};
-	}
-
-	static FileInfo get(GenericCommandEvent event) {
-		Message.Attachment attachment = event.getArg("attachment", Message.Attachment.class);
+	static FileInfo get(GenericCommandEvent event, Message.Attachment attachment) {
 		// Get all files from the message
 		if (attachment==null || !attachment.getFileName().toLowerCase().contains("output")) {
-			event.reply("Please attach a valid LogOutput file.");
+			event.reply("Please attach a valid LogOutput file.").finish();
 			return null;
 		}
 
 		return getFileInfo(attachment.getProxy().downloadToFile(new File(STR."logs\\\{UUID.randomUUID()}.log")).join());
 	}
 
-	@Command(name="pluginlist", help = "List all plugins")
+	@Command(name = "pluginlist", help = "List all plugins")
+	public static void pluginList(GenericCommandEvent event,
+								  @Param(description = "The attachment to parse", type = OptionType.ATTACHMENT) Message.Attachment attachment) {
+		FileInfo fileInfo = get(event, attachment);
+		event.replyMenu("plugin-list", fileInfo).finish();
+	}
+
 	@Menu(id = "plugin-list")
-	public static class PluginList extends PageMenu implements ICommand {
+	public static class PluginList extends PageMenu {
 		FileInfo info;
 		public PluginList() {
-
 		}
 		public PluginList(FileInfo fileInfo) {
 			this.info = fileInfo;
-		}
-
-		@Override
-		public void handle(GenericCommandEvent event) {
-			event.replyMenu("plugin-list", get(event));
-		}
-
-		@Override
-		public CommandInfo.Option[] getArguments() {
-			return new CommandInfo.Option[]{
-				CommandInfo.Option.required("attachment", "The attachment to parse", OptionType.ATTACHMENT, false)
-			};
 		}
 
 		@Override
@@ -133,11 +119,11 @@ public class LogParseCommand implements ICommand {
 	}
 
 	public static class FileInfo {
-		String bepInVersion;
-		String gameName;
-		String unityVersion;
-		List<String> plugins;
-		List<String> errors;
-		List<String> uniqueErrors;
+		String bepInVersion = "Unknown";
+		String gameName = "Unknown";
+		String unityVersion = "Unknown";
+		List<String> plugins = new ArrayList<>();
+		List<String> errors = new ArrayList<>();
+		List<String> uniqueErrors = new ArrayList<>();
 	}
 }
