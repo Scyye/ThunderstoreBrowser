@@ -1,17 +1,19 @@
 package dev.scyye.thunderstorebot.command.impl;
 
-import botcommons.commands.Command;
-import botcommons.commands.CommandHolder;
-import botcommons.commands.GenericCommandEvent;
-import botcommons.commands.Param;
+import botcommons.commands.*;
 import botcommons.menu.Menu;
 import botcommons.menu.types.PageMenu;
 import dev.scyye.thunderstorebot.versions.Version;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.utils.AttachedFile;
 
-import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 @CommandHolder
 public class MiscCommands {
@@ -45,7 +47,7 @@ public class MiscCommands {
 		public List<EmbedBuilder> getPageData() {
 			return Version.versions.stream().map(
 					version -> new EmbedBuilder()
-							.setTitle(STR."Changelog v\{version.version} \{version.beta?"-beta":""}")
+							.setTitle(STR."Changelog v\{version.version}\{version.beta?"-beta":""}")
 							.setDescription(version.changelog)
 							.addField("Release date", version.releaseDate, false)
 			).toList();
@@ -54,7 +56,37 @@ public class MiscCommands {
 
 	@Command(name = "help", help = "Shows help")
 	public static void help(GenericCommandEvent event) {
-		event.replyError("Help command isnt implemented\nAnnoy the shit out of @scyye").ephemeral().finish();
+		event.replyMenu("help").finish();
+	}
+
+	@Menu(id = "help")
+	public static class HelpMenu extends PageMenu {
+		@Override
+		public List<EmbedBuilder> getPageData() {
+			List<EmbedBuilder> pages = new ArrayList<>();
+			EmbedBuilder currentBuilder = new EmbedBuilder();
+
+			Field[] fields = CommandManager.class.getDeclaredFields();
+
+			HashMap<CommandInfo, Method> commands = new HashMap<>();
+			HashMap<String, Map.Entry<CommandInfo, Method>> subcommands = new HashMap<>();
+
+			try {
+				commands = (HashMap<CommandInfo, Method>) fields[0].get(null);
+				subcommands = (HashMap<String, Map.Entry<CommandInfo, Method>>) fields[1].get(null);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+
+			for (var command : commands.keySet()) {
+				if (currentBuilder.getFields().size() >= 10) {
+					pages.add(currentBuilder);
+					currentBuilder = new EmbedBuilder();
+				}
+				currentBuilder.addField(command.name, command.help, false);
+			}
+			return pages;
+		}
 	}
 
 	@Command(name = "version", help = "Get info on the newest version")
@@ -63,7 +95,8 @@ public class MiscCommands {
 		event.replySuccess(STR."""
 				Version: \{version.version}\{version.beta? " beta":""}
 				Release Date: \{version.releaseDate}
-				Changelog: \{version.changelog}
+				Changelog:
+				\{version.changelog}
 				""").finish();
 	}
 
@@ -83,5 +116,12 @@ public class MiscCommands {
 						"[Anarkey](https://thunderstore.io/c/rounds/p/Anarkey/Peanut_Butter/), " +
 						"[Root](https://ko-fi.com/rootsystem), [Assist](https://ko-fi.com/ascyst)", false)
 		).finish();
+	}
+
+	@Command(name = "soup", help = "Soup.")
+	public static void soup(GenericCommandEvent event) {
+		event.reply("Soup. That's what this command does, its just fucking soup.").finish(message -> {
+			message.editMessageAttachments(AttachedFile.fromData(Path.of("thunderstorebot-assets", "soup.png"))).queue();
+		});
 	}
 }

@@ -5,8 +5,8 @@ import botcommons.menu.Menu;
 import botcommons.menu.types.PageMenu;
 import dev.scyye.thunderstoreapi.api.TSJAUtils;
 import dev.scyye.thunderstoreapi.api.entities.packages.PackageListing;
+import dev.scyye.thunderstoreapi.cache.CacheCollector;
 import dev.scyye.thunderstorebot.Bot;
-import dev.scyye.thunderstorebot.cache.CacheCollector;
 import dev.scyye.thunderstorebot.utils.CommandUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -82,6 +82,7 @@ public class PackageCommand {
 						STR."<t:\{_package.getDateCreated().toInstant().getEpochSecond()}:R>"))).finish();
 	}
 
+	/*
 	@AutoCompleteHandler("package info")
 	public static void handleInfoAutocomplete(CommandAutoCompleteInteractionEvent event) {
 		switch (event.getFocusedOption().getName()) {
@@ -106,7 +107,7 @@ public class PackageCommand {
 				event.replyChoiceStrings("How did you get here?").queue();
 			}
 		}
-	}
+	}*/
 
 
 	@Command(name = "search", help = "Search for a package on Thunderstore")
@@ -172,12 +173,12 @@ public class PackageCommand {
 		switch (event.getFocusedOption().getName()) {
 			case "community" -> {
 				event.replyChoiceStrings(
-						CacheCollector.getCommunityAutocomplete(event.getFocusedOption().getValue())
+						CommandUtils.getCommunityAutocomplete(event.getFocusedOption().getValue())
 				).queue();
 			}
 			case "search", "depends" -> {
 				String community = event.getOption("community").getAsString();
-				var packages = CacheCollector.communityPackageCache.get(community);
+				var packages = CacheCollector.getPackagesByCommunity(community);
 
 				event.replyChoiceStrings(
 						packages.stream()
@@ -189,7 +190,7 @@ public class PackageCommand {
 			}
 			case "author" -> {
 				String community = event.getOption("community").getAsString();
-				var authors = CacheCollector.communityAuthorCache.get(community);
+				var authors = CacheCollector.getAuthorsByCommunity(community);
 
 				event.replyChoiceStrings(
 						authors.stream()

@@ -6,7 +6,9 @@ import com.google.gson.Gson;
 import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class CommandUtils {
@@ -37,20 +39,30 @@ public class CommandUtils {
 		boolean success = Arrays.stream(Bot.bot.tsja.getCommunities())
 				.anyMatch(c -> c.getIdentifier().equals(finalCommunity));
 
-		/*Arrays.stream(Bot.bot.tsja.getCommunities()).map(Community::getIdentifier).forEach(
-				System.out::println
-		);*/
-
-		//System.out.println();System.out.println();System.out.println();System.out.println();
-
-		//System.out.println(finalCommunity);
-
-
-
 		if (!success)
 			event.reply("Invalid Community. Do `/community all` for a list of valid communities.");
 
 		return !success;
+	}
+
+
+	public static List<String> getCommunityAutocomplete(String query) {
+		List<String> results = new ArrayList<>();
+		// First add all communities that start with the query
+		for (var community : dev.scyye.thunderstoreapi.cache.CacheCollector.getCommunities()) {
+			if (community.startsWith(query)) {
+				results.add(community);
+			}
+		}
+
+		// Then add all communities that contain the query
+		for (var community : dev.scyye.thunderstoreapi.cache.CacheCollector.getCommunities()) {
+			if (community.contains(query) && !results.contains(community)) {
+				results.add(community);
+			}
+		}
+
+		return results.stream().limit(25).toList();
 	}
 
 	public static String sanitizeAndReplace(String input) {
