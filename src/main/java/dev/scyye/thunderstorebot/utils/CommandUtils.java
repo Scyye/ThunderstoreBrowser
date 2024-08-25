@@ -3,10 +3,13 @@ package dev.scyye.thunderstorebot.utils;
 import botcommons.commands.GenericCommandEvent;
 import botcommons.config.GuildConfig;
 import com.google.gson.Gson;
+import dev.scyye.thunderstoreapi.cache.CacheCollector;
 import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class CommandUtils {
@@ -37,20 +40,23 @@ public class CommandUtils {
 		boolean success = Arrays.stream(Bot.bot.tsja.getCommunities())
 				.anyMatch(c -> c.getIdentifier().equals(finalCommunity));
 
-		/*Arrays.stream(Bot.bot.tsja.getCommunities()).map(Community::getIdentifier).forEach(
-				System.out::println
-		);*/
-
-		//System.out.println();System.out.println();System.out.println();System.out.println();
-
-		//System.out.println(finalCommunity);
-
-
-
 		if (!success)
 			event.reply("Invalid Community. Do `/community all` for a list of valid communities.");
 
 		return !success;
+	}
+
+
+	public static List<String> getCommunityAutocomplete(String query) {
+		List<String> results = new ArrayList<>();
+		List<String> communities = CacheCollector.getCommunities();
+		String lowerCaseQuery = query.toLowerCase();
+		communities.stream()
+				.filter(c -> c.toLowerCase().startsWith(lowerCaseQuery) || c.toLowerCase().contains(lowerCaseQuery))
+				.distinct()
+				.limit(25)
+				.forEach(results::add);
+		return results.stream().toList();
 	}
 
 	public static String sanitizeAndReplace(String input) {
