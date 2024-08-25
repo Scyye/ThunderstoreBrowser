@@ -160,6 +160,7 @@ public class Bot extends ListenerAdapter {
         new Version("24-8-2024", "1.0.1", """
                 * Fixed community autocomplete
                 * Fixed the community and package commands
+                * Added profile command
                 * General fixes
                 """, false);
     }
