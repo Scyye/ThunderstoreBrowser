@@ -49,22 +49,13 @@ public class CommandUtils {
 
 	public static List<String> getCommunityAutocomplete(String query) {
 		List<String> results = new ArrayList<>();
-		// First add all communities that start with the query
-		for (var community : CacheCollector.getCommunities()) {
-			if (results.size() >= 25) break;
-			if (community.startsWith(query.toLowerCase())) {
-				results.add(community);
-			}
-		}
-
-		// Then add all communities that contain the query
-		for (var community : CacheCollector.getCommunities()) {
-			if (results.size() >= 25) break;
-			if (community.contains(query.toLowerCase()) && !results.contains(community)) {
-				results.add(community);
-			}
-		}
-
+		List<String> communities = CacheCollector.getCommunities();
+		String lowerCaseQuery = query.toLowerCase();
+		communities.stream()
+				.filter(c -> c.toLowerCase().startsWith(lowerCaseQuery) || c.toLowerCase().contains(lowerCaseQuery))
+				.distinct()
+				.limit(25)
+				.forEach(results::add);
 		return results.stream().toList();
 	}
 
