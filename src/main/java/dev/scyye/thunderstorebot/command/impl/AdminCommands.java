@@ -58,7 +58,7 @@ public class AdminCommands {
 		}
 	}
 
-	@Command(name = "toggle-mod-role", help = "Adds a role to the moderator roles", permission = "MANAGE_SERVER")
+	@Command(name = "toggle-mod-role", help = "Adds a role to the moderator roles", permission = "MANAGE_SERVER", scope = Command.Scope.GUILD)
 	public static void toggleModRole(GenericCommandEvent event, @Param(
 			description = "The role to toggle") Role role) {
 		GuildConfig config = event.getConfig();
@@ -91,14 +91,14 @@ public class AdminCommands {
 				.ephemeral().finish();
 	}
 
-	@Command(name = "rename", help = "Rename the bot", permission = "MANAGE_SERVER")
+	@Command(name = "rename", help = "Rename the bot", permission = "MANAGE_SERVER", scope = Command.Scope.GUILD)
 	public static void rename(GenericCommandEvent event, @Param(description = "The new name") String name) {
 		if (name.length()>32) {
 			event.replyError("Must not be over 32 characters").finish();
 			return;
 		}
 
-		event.getGuild().getSelfMember().modifyNickname(name).queue(unused -> event.replySuccess("Renamed.").finish(), error -> {
+		event.getGuild().getSelfMember().modifyNickname(name).queue(_ -> event.replySuccess("Renamed.").finish(), error -> {
 			UUID uuid = UUID.randomUUID();
 			event.replyError("Failed to rename.\nContact <@553652308295155723> with this error code: " + uuid).finish();
 			System.out.println("Error code: " + uuid);
