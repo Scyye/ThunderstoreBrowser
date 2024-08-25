@@ -3,6 +3,7 @@ package dev.scyye.thunderstorebot.utils;
 import botcommons.commands.GenericCommandEvent;
 import botcommons.config.GuildConfig;
 import com.google.gson.Gson;
+import dev.scyye.thunderstoreapi.cache.CacheCollector;
 import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
@@ -49,20 +50,22 @@ public class CommandUtils {
 	public static List<String> getCommunityAutocomplete(String query) {
 		List<String> results = new ArrayList<>();
 		// First add all communities that start with the query
-		for (var community : dev.scyye.thunderstoreapi.cache.CacheCollector.getCommunities()) {
-			if (community.startsWith(query)) {
+		for (var community : CacheCollector.getCommunities()) {
+			if (results.size() >= 25) break;
+			if (community.startsWith(query.toLowerCase())) {
 				results.add(community);
 			}
 		}
 
 		// Then add all communities that contain the query
-		for (var community : dev.scyye.thunderstoreapi.cache.CacheCollector.getCommunities()) {
-			if (community.contains(query) && !results.contains(community)) {
+		for (var community : CacheCollector.getCommunities()) {
+			if (results.size() >= 25) break;
+			if (community.contains(query.toLowerCase()) && !results.contains(community)) {
 				results.add(community);
 			}
 		}
 
-		return results.stream().limit(25).toList();
+		return results.stream().toList();
 	}
 
 	public static String sanitizeAndReplace(String input) {
