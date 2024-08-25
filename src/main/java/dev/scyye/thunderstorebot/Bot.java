@@ -152,10 +152,15 @@ public class Bot extends ListenerAdapter {
                 * Security updates (thanks <@429810730691461130>)
                 * Changed community-info and community-list to subcommands of `community`
                 """ , true);
-        new Version("8-7-2024", "1.0.0", """
+        new Version("7-8-2024", "1.0.0", """
                 * General fixes
                 * Added `soup` command (blame justin)
                 * Added admin commands back
+                """, false);
+        new Version("24-8-2024", "1.0.1", """
+                * Fixed community autocomplete
+                * Fixed the community and package commands
+                * General fixes
                 """, false);
     }
 }

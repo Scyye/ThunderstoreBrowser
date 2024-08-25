@@ -28,11 +28,14 @@ public class AdminCommands {
 			return;
 		}
 
-		if (config.get("disabledChannels", List.class).contains(channel.getId())) {
-			config.set("disabledChannels", ((List<String>) config.get("disabledChannels", List.class)).remove(channel.getId()));
+		List<String> disabledChannels = new ArrayList<>(Arrays.stream(config.get("disabledChannels", String[].class)).toList());
+		if (disabledChannels.contains(channel.getId())) {
+			disabledChannels.remove(channel.getId());
+			config.set("disabledChannels", disabledChannels);
 			event.replySuccess("Enabled channel.").ephemeral().finish();
 		} else {
-			config.set("disabledChannels", ((List<String>) config.get("disabledChannels", List.class)).add(channel.getId()));
+			disabledChannels.add(channel.getId());
+			config.set("disabledChannels", disabledChannels);
 			event.replySuccess("Disabled channel.").ephemeral().finish();
 		}
 	}
@@ -44,11 +47,13 @@ public class AdminCommands {
 
 		List<String> disabledUsers = new ArrayList<>(Arrays.stream(config.get("disabledUsers", String[].class)).toList());
 
-		if (Arrays.stream(config.get("disabledUsers", String[].class)).toList().contains(user.getId())) {
-			config.set("disabledUsers", disabledUsers.remove(user.getId()));
+		if (disabledUsers.contains(user.getId())) {
+			disabledUsers.remove(user.getId());
+			config.set("disabledUsers", disabledUsers);
 			event.replySuccess("Enabled user.").ephemeral().finish();
 		} else {
-			config.set("disabledUsers", disabledUsers.add(user.getId()));
+			disabledUsers.add(user.getId());
+			config.set("disabledUsers", disabledUsers);
 			event.replySuccess("Disabled user.").ephemeral().finish();
 		}
 	}
@@ -63,11 +68,14 @@ public class AdminCommands {
 			return;
 		}
 
-		if (Arrays.stream(config.get("moderatorRoles", String[].class)).toList().contains(role.getId())) {
-			config.set("moderatorRoles", Arrays.stream((config.get("moderatorRoles", String[].class))).toList().remove(role.getId()));
+		List<String> moderatorRoles = new ArrayList<>(Arrays.stream(config.get("moderatorRoles", String[].class)).toList());
+		if (moderatorRoles.contains(role.getId())) {
+			moderatorRoles.remove(role.getId());
+			config.set("moderatorRoles", moderatorRoles);
 			event.replySuccess("Removed moderator role.").ephemeral().finish();
 		} else {
-			config.set("moderatorRoles", ((List<String>) config.get("moderatorRoles", List.class)).add(role.getId()));
+			moderatorRoles.add(role.getId());
+			config.set("moderatorRoles", moderatorRoles);
 			event.replySuccess("Added moderator role.").ephemeral().finish();
 		}
 	}
