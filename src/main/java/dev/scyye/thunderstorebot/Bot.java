@@ -171,6 +171,7 @@ public class Bot extends ListenerAdapter {
                 """, false);
         new Version("29-8-2024", "1.0.2", """
                 * Updated BotCommons
+                * Use loose matching in autocomplete.
                 """, false);
     }
 }
