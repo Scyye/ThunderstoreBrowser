@@ -8,6 +8,7 @@ import dev.scyye.thunderstoreapi.api.entities.packages.PackageListing;
 import dev.scyye.thunderstoreapi.cache.CacheCollector;
 import dev.scyye.thunderstorebot.Bot;
 import dev.scyye.thunderstorebot.utils.CommandUtils;
+import dev.scyye.thunderstorebot.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
@@ -97,7 +98,7 @@ public class PackageCommand {
 
 				event.replyChoiceStrings(
 						packages.stream()
-								.filter(p -> p.getFullName().startsWith(event.getFocusedOption().getValue()))
+								.filter(p -> Utils.loseEquals(p.getFullName(), event.getFocusedOption().getValue()))
 								.limit(25)
 								.map(p -> STR."\{p.getUniqueId().toString()} (\{p.getFullName()})")
 								.toList()
@@ -179,7 +180,7 @@ public class PackageCommand {
 
 				event.replyChoiceStrings(
 						packages.stream()
-								.filter(p -> p.getName().toLowerCase().startsWith(event.getFocusedOption().getValue().toLowerCase()))
+								.filter(p -> Utils.loseEquals(p.getFullName().toLowerCase(), event.getFocusedOption().getValue().toLowerCase()))
 								.limit(25)
 								.map(PackageListing::getName)
 								.toList()
@@ -191,7 +192,7 @@ public class PackageCommand {
 
 				event.replyChoiceStrings(
 						authors.stream()
-								.filter(a -> a.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+								.filter(a -> Utils.loseEquals(a.toLowerCase(), event.getFocusedOption().getValue().toLowerCase()))
 								.limit(25)
 								.toList()
 				).queue();

@@ -54,7 +54,7 @@ public class CommandUtils {
 		List<String> communities = CacheCollector.getCommunities();
 		String lowerCaseQuery = query.toLowerCase();
 		communities.stream()
-				.filter(c -> c.toLowerCase().startsWith(lowerCaseQuery) || c.toLowerCase().contains(lowerCaseQuery))
+				.filter(c -> c.toLowerCase().startsWith(lowerCaseQuery) || Utils.loseEquals(c, lowerCaseQuery))
 				.distinct()
 				.limit(25)
 				.forEach(results::add);
