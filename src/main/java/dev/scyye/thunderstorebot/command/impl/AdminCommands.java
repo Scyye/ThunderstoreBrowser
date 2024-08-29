@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import dev.scyye.thunderstoreapi.api.entities.community.Community;
 import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 
