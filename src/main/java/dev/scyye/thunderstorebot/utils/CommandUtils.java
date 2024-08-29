@@ -1,5 +1,6 @@
 package dev.scyye.thunderstorebot.utils;
 
+import botcommons.commands.CommandInfo;
 import botcommons.commands.GenericCommandEvent;
 import botcommons.config.GuildConfig;
 import com.google.gson.Gson;
@@ -14,10 +15,11 @@ import java.util.function.Predicate;
 
 public class CommandUtils {
 	public static boolean checkExecution(GenericCommandEvent event) {
-		Gson gson = new Gson();
+		if (!event.isGuild() && !CommandInfo.from(event).permission.equals("owner"))
+			return false;
 		return checkExecute(event, e ->
-				!Arrays.stream(gson.fromJson(GuildConfig.fromGuildId(e.getGuild().getId()).get("disabledChannels", String.class), String[].class)).toList().contains(e.getChannel().getId())
-						&& !Arrays.stream(gson.fromJson(GuildConfig.fromGuildId(e.getGuild().getId()).get("disabledUsers", String.class), String[].class)).toList().contains(e.getUser().getId()));
+				!Arrays.stream(GuildConfig.fromGuildId(e.getGuild().getId()).get("disabledChannels", String[].class)).toList().contains(e.getChannel().getId())
+						&& !Arrays.stream(GuildConfig.fromGuildId(e.getGuild().getId()).get("disabledUsers", String[].class)).toList().contains(e.getUser().getId()));
 	}
 
 	public static boolean checkExecute(GenericCommandEvent event, Predicate<GenericCommandEvent> predicate) {

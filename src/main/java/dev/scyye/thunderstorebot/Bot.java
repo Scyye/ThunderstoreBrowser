@@ -72,11 +72,14 @@ public class Bot extends ListenerAdapter {
         if (!event.getUserId().equals("553652308295155723"))
             return;
 
+        if (event.getReaction().getEmoji().getType().equals(Emoji.Type.CUSTOM)) {
+            return;
+        }
+
         if (event.getReaction().getEmoji().asUnicode().equals(Emoji.fromUnicode("U+274C"))) {
-            event.getChannel().deleteMessageById(event.getMessageId()).queue();
+            event.getChannel().deleteMessageById(event.getMessageId()).queue(_ -> {}, _ -> System.out.println("Failed to delete message"));
         }
         // if its a pin emoji, pin the message
-        System.out.println(event.getReaction().getEmoji().getName());
         if (event.getReaction().getEmoji().getName().contains("\uD83D\uDCCC")) {
             System.out.println("2");
             event.getChannel().retrievePinnedMessages().queue(messages -> {
@@ -99,8 +102,6 @@ public class Bot extends ListenerAdapter {
 
     public static void main(String[] args) {
         bot = new Bot();
-
-        //CacheCollector.init();
 
         new Version("23-10-2023", "1.0.0", """
                 * Created bot
