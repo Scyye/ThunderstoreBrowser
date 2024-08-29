@@ -7,6 +7,7 @@ import botcommons.menu.MenuManager;
 import dev.scyye.thunderstoreapi.api.TSJA;
 import dev.scyye.thunderstoreapi.api.TSJABuilder;
 import dev.scyye.thunderstorebot.command.impl.*;
+import dev.scyye.thunderstorebot.utils.CommandUtils;
 import dev.scyye.thunderstorebot.utils.SuggestionListener;
 import dev.scyye.thunderstorebot.versions.Version;
 import net.dv8tion.jda.api.JDA;
@@ -49,7 +50,11 @@ public class Bot extends ListenerAdapter {
 
         GuildConfig.init(jda);
 
-        CommandManager.init(jda);
+        CommandManager.init(jda, (event -> {
+            if (event.getUserId().equals(Config.getInstance().get("owner-id")))
+                return true;
+			return CommandUtils.checkExecution(event);
+		}));
         CommandManager.addCommands(
                 AddInviteCommand.class,
                 CommunityCommand.class,
@@ -163,6 +168,9 @@ public class Bot extends ListenerAdapter {
                 * Fixed the community and package commands
                 * Added profile command
                 * General fixes
+                """, false);
+        new Version("29-8-2024", "1.0.2", """
+                * Updated BotCommons
                 """, false);
     }
 }

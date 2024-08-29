@@ -82,18 +82,18 @@ public class PackageCommand {
 						STR."<t:\{_package.getDateCreated().toInstant().getEpochSecond()}:R>"))).finish();
 	}
 
-	/*
+
 	@AutoCompleteHandler("package info")
 	public static void handleInfoAutocomplete(CommandAutoCompleteInteractionEvent event) {
 		switch (event.getFocusedOption().getName()) {
 			case "community" -> {
 				event.replyChoiceStrings(
-						CacheCollector.getCommunityAutocomplete(event.getFocusedOption().getValue())
+						CommandUtils.getCommunityAutocomplete(event.getFocusedOption().getValue())
 				).queue();
 			}
 			case "uuid" -> {
 				String community = event.getOption("community").getAsString();
-				var packages = CacheCollector.communityPackageCache.get(community);
+				var packages = CacheCollector.getPackagesByCommunity(community);
 
 				event.replyChoiceStrings(
 						packages.stream()
@@ -107,7 +107,7 @@ public class PackageCommand {
 				event.replyChoiceStrings("How did you get here?").queue();
 			}
 		}
-	}*/
+	}
 
 
 	@Command(name = "search", help = "Search for a package on Thunderstore")
@@ -118,7 +118,6 @@ public class PackageCommand {
 							  @Param(description = "Filter by dependencies", required = false, autocomplete = true) String depends) {
 		event.deferReply();
 		List<PackageListing> result;
-		if (!checkExecution(event)) return;
 
 		if (author == null)
 			author = "null";

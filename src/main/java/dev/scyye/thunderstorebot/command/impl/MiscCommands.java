@@ -56,7 +56,7 @@ public class MiscCommands {
 
 	@Command(name = "help", help = "Shows help")
 	public static void help(GenericCommandEvent event) {
-		event.replyMenu("help").finish();
+		event.replyError("annoy the shit out of @scyye to implement this ^v^").finish();
 	}
 
 	@Menu(id = "help")

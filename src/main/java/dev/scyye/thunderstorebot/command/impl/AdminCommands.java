@@ -22,11 +22,6 @@ public class AdminCommands {
 	public static void toggleChannel(GenericCommandEvent event,
 									  @Param(description = "The channel to toggle", autocomplete = true) GuildChannel channel) {
 		GuildConfig config = event.getConfig();
-		if (!event.getMember().hasPermission(Permission.ADMINISTRATOR) &&
-				event.getMember().getRoles().stream().map(ISnowflake::getId).noneMatch(config.get("moderatorRoles")::contains)) {
-			event.replyError("You do not have permission to use this command.").ephemeral().finish();
-			return;
-		}
 
 		List<String> disabledChannels = new ArrayList<>(Arrays.stream(config.get("disabledChannels", String[].class)).toList());
 		if (disabledChannels.contains(channel.getId())) {
@@ -62,11 +57,6 @@ public class AdminCommands {
 	public static void toggleModRole(GenericCommandEvent event, @Param(
 			description = "The role to toggle") Role role) {
 		GuildConfig config = event.getConfig();
-		if (!event.getMember().hasPermission(Permission.ADMINISTRATOR) &&
-				event.getMember().getRoles().stream().map(ISnowflake::getId).noneMatch(config.get("moderatorRoles")::contains)) {
-			event.replyError("You do not have permission to use this command.").ephemeral().finish();
-			return;
-		}
 
 		List<String> moderatorRoles = new ArrayList<>(Arrays.stream(config.get("moderatorRoles", String[].class)).toList());
 		if (moderatorRoles.contains(role.getId())) {
