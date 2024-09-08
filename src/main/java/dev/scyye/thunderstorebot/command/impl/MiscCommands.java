@@ -8,11 +8,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.utils.AttachedFile;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.*;
 
+@SuppressWarnings("unused")
 @CommandHolder
 public class MiscCommands {
 	@Command(name = "ping", help = "Pong!")
@@ -43,7 +42,7 @@ public class MiscCommands {
 		public List<EmbedBuilder> getPageData() {
 			return Version.versions.stream().map(
 					version -> new EmbedBuilder()
-							.setTitle(STR."Changelog v\{version.version}\{version.beta?"-beta":""}")
+							.setTitle("Changelog v%s%s".formatted(version.version, version.beta ? " beta" : ""))
 							.setDescription(version.changelog)
 							.addField("Release date", version.releaseDate, false)
 			).toList();
@@ -89,12 +88,12 @@ public class MiscCommands {
 	@Command(name = "version", help = "Get info on the newest version")
 	public static void version(GenericCommandEvent event) {
 		var version = Version.versions.getLast();
-		event.replySuccess(STR."""
-				Version: \{version.version}\{version.beta? " beta":""}
-				Release Date: \{version.releaseDate}
+		event.replySuccess("""
+				Version: %s%s}
+				Release Date: %s
 				Changelog:
-				\{version.changelog}
-				""").finish();
+				%s
+				""".formatted(version.version, version.beta?" beta":"", version.releaseDate, version.changelog)).finish();
 	}
 
 	@Command(name = "invite", help = "Generate an invite link for the bot")

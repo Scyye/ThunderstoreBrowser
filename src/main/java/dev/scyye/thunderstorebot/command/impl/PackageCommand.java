@@ -21,6 +21,7 @@ import java.util.List;
 
 import static dev.scyye.thunderstorebot.utils.CommandUtils.*;
 
+@SuppressWarnings("unused")
 @CommandHolder(group = "package")
 public class PackageCommand {
 
@@ -77,10 +78,10 @@ public class PackageCommand {
                 Latest Version: %s
                 Latest Update Date: %s
                 Initial Upload Date: %s
-                """.formatted(_package.getName(), _package.getOwner(), "<"+_package.getDonationLink()+">", _package.getVersions()[0].getDescription(), _package.getPackageUrl(), _package.getUniqueId(), _package.getRatingScore(),
+                """.formatted(_package.getName(), _package.getOwner(), "<%s>".formatted(_package.getDonationLink()), _package.getVersions()[0].getDescription(), _package.getPackageUrl(), _package.getUniqueId(), _package.getRatingScore(),
 						_package.isPinned(), _package.isDeprecated(), _package.hasNsfwContent(), Arrays.toString(_package.getCategories()),
-						_package.getVersions()[0].getVersionNumber(), STR."<t:\{_package.getDateUpdated().toInstant().getEpochSecond()}:R>",
-						STR."<t:\{_package.getDateCreated().toInstant().getEpochSecond()}:R>"))).finish();
+						_package.getVersions()[0].getVersionNumber(), "<t:%d:R>".formatted(_package.getDateUpdated().toInstant().getEpochSecond()),
+						"<t:%d:R>".formatted(_package.getDateCreated().toInstant().getEpochSecond())))).finish();
 	}
 
 
@@ -103,7 +104,7 @@ public class PackageCommand {
 						packages.stream()
 								.filter(p -> Utils.loseEquals(p.getFullName(), event.getFocusedOption().getValue()))
 								.limit(25)
-								.map(p -> STR."\{p.getUniqueId().toString()} (\{p.getFullName()})")
+								.map(p -> "%s (%s)".formatted(p.getUniqueId(), p.getFullName()))
 								.toList()
 				).queue();
 			}
@@ -244,15 +245,19 @@ public class PackageCommand {
 					pages.add(currentPage);
 					page = page + 1;
 					currentPage = new EmbedBuilder()
-							.setTitle("Mods Page " + page + STR."/\{result.length / 5}")
-							.setFooter("Search: " + search)
+							.setTitle("Mods Page %d/%d".formatted(page, (result.length/5)))
+							.setFooter("Search: %s".formatted(search))
 							.setColor(0x00ff00);
 				}
-				String packageName = MarkdownUtil.underline(p.isDeprecated() ? STR."~~\{p.getName()}~~" : p.getName());
-				String ownerLink = MarkdownUtil.maskedLink(p.getOwner(), STR."https://thunderstore.io/c/\{community}/p/\{p.getOwner()}/");
-				String downloadLink = MarkdownUtil.maskedLink("here", STR."<\{p.getVersions()[0].getDownloadUrl()}>");
+				String packageName = MarkdownUtil.underline(p.isDeprecated() ? "~~%s~~".formatted(p.getName()) : p.getName());
+				String ownerLink = MarkdownUtil.maskedLink(p.getOwner(), "https://thunderstore.io/c/%s/p/%s/".formatted(community, p.getOwner()));
+				String downloadLink = MarkdownUtil.maskedLink("here", "<%s>".formatted(p.getVersions()[0].getDownloadUrl()));
 
-				currentPage.addField(packageName, STR."Page: \{p.getPackageUrl().toString()}\nCreated By: \{ownerLink}\nDownload: \{downloadLink}", false);
+				currentPage.addField(packageName, """
+				Page: %s
+				Created By: %s
+				Download: %s
+				""".formatted(p.getPackageUrl().toString(), ownerLink, downloadLink), false);
 
 				onPage++;
 			}

@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 @CommandHolder(group = "logparse")
 public class LogParseCommand {
 	@Command(name = "parseinfo", help = "Parses a log file")
@@ -30,11 +31,10 @@ public class LogParseCommand {
 		}
 
 		EmbedBuilder embedBuilder = new EmbedBuilder();
-		embedBuilder.setTitle(STR."\{fileInfo.gameName} - BepInEx v\{fileInfo.bepInVersion}")
-				.setAuthor(STR."Unity \{fileInfo.unityVersion}")
+		embedBuilder.setTitle("%s - BepInEx v%s".formatted(fileInfo.gameName, fileInfo.bepInVersion))
+				.setAuthor("Unity %s".formatted(fileInfo.unityVersion))
 				.addField("Plugin Count", String.valueOf(fileInfo.plugins.size()), true)
-				.addField("Error Count", STR."\{fileInfo.errors.size()} (\{fileInfo.uniqueErrors.size()} unique errors)", true);
-
+				.addField("Error Count", "%s (%s unique errors)".formatted(fileInfo.errors.size(), fileInfo.uniqueErrors.size()), true);
 		for (var e : fileInfo.uniqueErrors) {
 			embedBuilder.addField("Error", e, false);
 		}
@@ -50,7 +50,7 @@ public class LogParseCommand {
 			return null;
 		}
 
-		return getFileInfo(attachment.getProxy().downloadToFile(new File(STR."thunderstorebot-assets\\logs\\\{UUID.randomUUID()}.log")).join());
+		return getFileInfo(attachment.getProxy().downloadToFile(new File("thunderstorebot-assets\\logs\\%s.log".formatted(UUID.randomUUID().toString()))).join());
 	}
 
 	@Command(name = "pluginlist", help = "List all plugins")

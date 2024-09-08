@@ -3,6 +3,7 @@ package dev.scyye.thunderstorebot.command.impl;
 import botcommons.commands.*;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 
+@SuppressWarnings("unused")
 @CommandHolder
 public class AddInviteCommand {
 
@@ -14,9 +15,8 @@ public class AddInviteCommand {
 
 			event.getJDA().getGuildById(guildId).getTextChannels()
 					.getFirst().createInvite().
-					setMaxUses(1).queue(invite -> {
-						event.replySuccess("Invite created: " + invite.getUrl());
-					});
+					setMaxUses(1).queue(invite ->
+							event.replySuccess("Invite created: " + invite.getUrl()));
 		} catch (Exception e) {
 			event.replyError("I don't know that guild!\nAre they in any guilds with me?");
 		}
@@ -25,7 +25,7 @@ public class AddInviteCommand {
 	@AutoCompleteHandler("addinvite")
 	public static void handleAutocomplete(CommandAutoCompleteInteractionEvent event) {
 		event.replyChoiceStrings(
-				event.getJDA().getGuilds().stream().map(guild -> STR."\{guild.getId()} (\{guild.getName()})").toList()
+				event.getJDA().getGuilds().stream().map(guild -> "%s (%s)".formatted(guild.getId(),guild.getName())).toList()
 		).queue();
 	}
 }
