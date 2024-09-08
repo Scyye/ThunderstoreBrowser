@@ -46,7 +46,7 @@ public class LogParseCommand {
 			return null;
 		}
 
-		return getFileInfo(attachment.getProxy().downloadToFile(new File(STR."logs\\\{UUID.randomUUID()}.log")).join());
+		return getFileInfo(attachment.getProxy().downloadToFile(new File(STR."thunderstorebot-assets\\logs\\\{UUID.randomUUID()}.log")).join());
 	}
 
 	@Command(name = "pluginlist", help = "List all plugins")
