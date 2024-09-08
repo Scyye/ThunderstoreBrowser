@@ -96,6 +96,11 @@ public class PackageCommand {
 				String community = event.getOption("community").getAsString();
 				var packages = CacheCollector.getPackagesByCommunity(community);
 
+				if (packages.isEmpty()) {
+					event.replyChoiceStrings("No packages found.").queue();
+					return;
+				}
+
 				event.replyChoiceStrings(
 						packages.stream()
 								.filter(p -> Utils.loseEquals(p.getFullName(), event.getFocusedOption().getValue()))
