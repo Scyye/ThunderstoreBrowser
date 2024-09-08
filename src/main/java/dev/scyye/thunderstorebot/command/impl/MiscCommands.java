@@ -28,7 +28,7 @@ public class MiscCommands {
 	}
 
 
-	@Command(name = "echo", help = "Echoes the message")
+	@Command(name = "echo", help = "Echoes the message", permission = "owner")
 	public static void echo(GenericCommandEvent event, @Param(description = "The message to echo") String message) {
 		event.getChannel().sendMessage(message).queue();
 		event.replyEphemeral("Success").finish();
