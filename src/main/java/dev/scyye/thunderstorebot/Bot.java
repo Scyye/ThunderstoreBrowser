@@ -66,7 +66,7 @@ public class Bot extends ListenerAdapter {
         );
 
         MenuManager.registerMenu(new PackageCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
-                new CommunityCommand.CommunityListMenu(), new MiscCommands.ChangelogCommand(), new MiscCommands.HelpMenu());
+                new CommunityCommand.CommunityListMenu(), new MiscCommands.ChangelogCommand());
 
         tsja = new TSJABuilder()
                 .build();

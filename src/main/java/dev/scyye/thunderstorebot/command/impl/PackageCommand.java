@@ -87,11 +87,9 @@ public class PackageCommand {
 	@AutoCompleteHandler("package info")
 	public static void handleInfoAutocomplete(CommandAutoCompleteInteractionEvent event) {
 		switch (event.getFocusedOption().getName()) {
-			case "community" -> {
-				event.replyChoiceStrings(
-						CommandUtils.getCommunityAutocomplete(event.getFocusedOption().getValue())
-				).queue();
-			}
+			case "community" -> event.replyChoiceStrings(
+					CommandUtils.getCommunityAutocomplete(event.getFocusedOption().getValue())
+			).queue();
 			case "uuid" -> {
 				String community = event.getOption("community").getAsString();
 				var packages = CacheCollector.getPackagesByCommunity(community);
@@ -109,9 +107,7 @@ public class PackageCommand {
 								.toList()
 				).queue();
 			}
-			default -> {
-				event.replyChoiceStrings("How did you get here?").queue();
-			}
+			default -> event.replyChoiceStrings("How did you get here?").queue();
 		}
 	}
 
@@ -177,8 +173,8 @@ public class PackageCommand {
 	public void handleSearchAutocomplete(CommandAutoCompleteInteractionEvent event) {
 		switch (event.getFocusedOption().getName()) {
 			case "community" ->
-					event.replyChoiceStrings(
-					CommandUtils.getCommunityAutocomplete(event.getFocusedOption().getValue())).queue();
+					event.replyChoiceStrings
+							(CommandUtils.getCommunityAutocomplete(event.getFocusedOption().getValue())).queue();
 			case "search", "depends" -> {
 				String community = event.getOption("community").getAsString();
 				var packages = CacheCollector.getPackagesByCommunity(community);

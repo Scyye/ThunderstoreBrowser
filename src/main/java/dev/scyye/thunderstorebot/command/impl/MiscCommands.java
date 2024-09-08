@@ -6,12 +6,10 @@ import botcommons.menu.types.PageMenu;
 import dev.scyye.thunderstorebot.versions.Version;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.utils.AttachedFile;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -20,11 +18,9 @@ public class MiscCommands {
 	@Command(name = "ping", help = "Pong!")
 	public static void ping(GenericCommandEvent event) {
 		var time = System.currentTimeMillis();
-		event.reply("Pong!", message -> {
-			message.editMessageFormat(
-					"Pong! %d ms", System.currentTimeMillis() - time
-			).queue();
-		});
+		event.reply("Pong!", message -> message.editMessageFormat(
+				"Pong! %d ms", System.currentTimeMillis() - time
+		).queue());
 	}
 
 
@@ -59,6 +55,7 @@ public class MiscCommands {
 		event.replyError("annoy the shit out of @scyye to implement this ^v^").finish();
 	}
 
+	/*
 	@Menu(id = "help")
 	public static class HelpMenu extends PageMenu {
 		@Override
@@ -87,7 +84,7 @@ public class MiscCommands {
 			}
 			return pages;
 		}
-	}
+	}*/
 
 	@Command(name = "version", help = "Get info on the newest version")
 	public static void version(GenericCommandEvent event) {
@@ -120,8 +117,7 @@ public class MiscCommands {
 
 	@Command(name = "soup", help = "Soup.")
 	public static void soup(GenericCommandEvent event) {
-		event.reply("Soup. That's what this command does, its just fucking soup.").finish(message -> {
-			message.editMessageAttachments(AttachedFile.fromData(Path.of("thunderstorebot-assets", "soup.png"))).queue();
-		});
+		event.reply("Soup. That's what this command does, its just fucking soup.").finish(message ->
+				message.editMessageAttachments(AttachedFile.fromData(Path.of("thunderstorebot-assets", "soup.png"))).queue());
 	}
 }

@@ -24,6 +24,10 @@ public class LogParseCommand {
 	public static void parseInfo(GenericCommandEvent event,
 								 @Param(description = "The log file to parse") Message.Attachment attachment) {
 		FileInfo fileInfo = get(event, attachment);
+		if (fileInfo == null) {
+			event.replyError("Failed to parse log file").finish();
+			return;
+		}
 
 		EmbedBuilder embedBuilder = new EmbedBuilder();
 		embedBuilder.setTitle(STR."\{fileInfo.gameName} - BepInEx v\{fileInfo.bepInVersion}")
