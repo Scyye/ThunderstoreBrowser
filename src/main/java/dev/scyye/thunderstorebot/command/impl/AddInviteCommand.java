@@ -16,7 +16,7 @@ public class AddInviteCommand {
 			event.getJDA().getGuildById(guildId).getTextChannels()
 					.getFirst().createInvite().
 					setMaxUses(1).queue(invite ->
-							event.replySuccess("Invite created: " + invite.getUrl()));
+							event.replySuccess("Invite created: %s".formatted(invite.getUrl())));
 		} catch (Exception e) {
 			event.replyError("I don't know that guild!\nAre they in any guilds with me?");
 		}

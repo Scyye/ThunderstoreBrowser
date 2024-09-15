@@ -16,6 +16,6 @@ public class ProfileCommand {
 	public static void modList(GenericCommandEvent event, @Param(description = "The profile to search") String profile) {
 		Client client = new Client("https://thunderstore.io/api/experimental/");
 		event.deferReply();
-		client.get("legacyprofile/get/" + profile, new DataObject());
+		client.get("legacyprofile/get/%s".formatted(profile), new DataObject());
 	}
 }

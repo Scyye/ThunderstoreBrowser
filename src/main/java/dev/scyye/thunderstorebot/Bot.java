@@ -102,7 +102,7 @@ public class Bot extends ListenerAdapter {
 
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
-        System.out.println("Ready in " + event.getGuild().getName());
+        System.out.printf("\nReady in %s", event.getGuild().getName());
     }
 
     public static void main(String[] args) {

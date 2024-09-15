@@ -108,7 +108,7 @@ public class MiscCommands {
 				.addField("Thunderstore Java API", "[Scyye](https://github.com/Scyye)", false)
 				.addField("Bot's Code", "[Scyye](https://github.com/Scyye)", false)
 				.addField("Art & Other Assets", "[Keyanlux](https://www.youtube.com/@Keyanlux_Deluxe)", false)
-				.addField("Testers", "[Poppycars](https://github.com/poppycars22/), " +
+				.addField("Testers", "[Poppycars](https://github.com/poppycars22/),  " +
 						"[Anarkey](https://thunderstore.io/c/rounds/p/Anarkey/Peanut_Butter/), " +
 						"[Root](https://ko-fi.com/rootsystem), [Assist](https://ko-fi.com/ascyst)", false)
 		).finish();

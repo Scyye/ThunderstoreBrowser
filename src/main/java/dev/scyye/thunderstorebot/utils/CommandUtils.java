@@ -25,8 +25,7 @@ public class CommandUtils {
 	public static boolean checkExecute(GenericCommandEvent event, Predicate<GenericCommandEvent> predicate) {
 		if (predicate.test(event))
 			return true;
-		event.replyError("You do not have permission to use this command. " +
-				"If you believe this is an error, please contact this server's staff, or <@553652308295155723>");
+		event.replyError("You do not have permission to use this command. \nIf you believe this is an error, please contact this server's staff, or <@553652308295155723>");
 		return false;
 	}
 

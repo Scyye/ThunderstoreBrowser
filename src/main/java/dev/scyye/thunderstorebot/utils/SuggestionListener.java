@@ -25,7 +25,7 @@ public class SuggestionListener extends ListenerAdapter {
 
 		event.getJDA().retrieveUserById("553652308295155723").queue(
 				user -> user.openPrivateChannel().flatMap(
-						channel -> channel.sendMessage(event.getAuthor().getName() + " suggested: " + event.getMessage().getContentRaw())
+						channel -> channel.sendMessage("%s suggested: %s".formatted(event.getAuthor().getName(), event.getMessage().getContentRaw()))
 				).queue()
 		);
 

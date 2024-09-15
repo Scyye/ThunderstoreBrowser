@@ -72,10 +72,10 @@ public class CommunityCommand {
 					.setTitle("Communities")
 					.setDescription("List of all communities");
 
-			currentEmbed.setTitle("Communities - Page " + page);
+			currentEmbed.setTitle("Communities - Page %d".formatted(page));
 			for (Community community : Bot.bot.tsja.getCommunities()) {
 				if (onPage > 5) {
-					currentEmbed.setTitle("Communities - Page " + page);
+					currentEmbed.setTitle("Communities - Page %d".formatted(page));
 					embedBuilders.add(currentEmbed);
 					currentEmbed = new EmbedBuilder()
 							.setTitle("Communities")
@@ -84,7 +84,7 @@ public class CommunityCommand {
 					page++;
 				}
 				currentEmbed.addField(community.getIdentifier(),
-						"https://thunderstore.io/c/"+community.getIdentifier(), false);
+						"https://thunderstore.io/c/%s".formatted(community.getIdentifier()), false);
 				onPage++;
 			}
 

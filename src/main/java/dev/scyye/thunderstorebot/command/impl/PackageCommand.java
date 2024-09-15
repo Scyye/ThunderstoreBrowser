@@ -167,7 +167,7 @@ public class PackageCommand {
 		}
 
 		event.replyMenu("package-search-menu", result.toArray(PackageListing[]::new), search +
-				(author.equals("null")? "":"\nBy: " + author), community).finish();
+				(author.equals("null")? "":"\nBy: %s".formatted(author)), community).finish();
 	}
 
 	@AutoCompleteHandler("package search")
@@ -227,13 +227,13 @@ public class PackageCommand {
 		private List<EmbedBuilder> buildPages(PackageListing[] result, String search, String community) {
 			List<EmbedBuilder> pages = new ArrayList<>();
 
-			String footer = "Community: " + community;
+			String footer = "Community: %s".formatted(community);
 			if (!search.equals("null"))
-				footer += "\nSearch: "+search;
+				footer += "\nSearch: %s".formatted(search);
 
 			EmbedBuilder currentPage =
 					new EmbedBuilder()
-							.setTitle("Mods Page 1/"+result.length/5)
+							.setTitle("Mods Page 1/%d".formatted(result.length/5))
 							.setFooter(footer)
 							.setColor(0x00ff00);
 

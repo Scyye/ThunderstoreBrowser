@@ -90,9 +90,9 @@ public class AdminCommands {
 
 		event.getGuild().getSelfMember().modifyNickname(name).queue(_ -> event.replySuccess("Renamed.").finish(), error -> {
 			UUID uuid = UUID.randomUUID();
-			event.replyError("Failed to rename.\nContact <@553652308295155723> with this error code: " + uuid).finish();
-			System.out.println("Error code: " + uuid);
-			System.out.println("Error: " + error.getMessage());
+			event.replyError("Failed to rename.\nContact <@553652308295155723> with this error code: %s".formatted(uuid)).finish();
+			System.out.printf("Error code: %s", uuid);
+			System.out.printf("Error: %s", error.getMessage());
 			error.printStackTrace();
 		});
 	}
@@ -112,7 +112,7 @@ public class AdminCommands {
 			return;
 		}
 		config.set("community", community);
-		event.replySuccess("Set community to " + community).ephemeral().finish();
+		event.replySuccess("Set community to %s".formatted(community)).ephemeral().finish();
 	}
 }
 
