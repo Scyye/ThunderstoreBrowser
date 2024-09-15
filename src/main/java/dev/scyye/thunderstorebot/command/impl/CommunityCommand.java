@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @CommandHolder(group = "community")
 public class CommunityCommand {
 	@Command(name = "info", help = "Get information about a community")

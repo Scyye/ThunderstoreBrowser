@@ -105,7 +105,7 @@ public class Bot extends ListenerAdapter {
         System.out.printf("\nReady in %s", event.getGuild().getName());
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] ignoredArgs) {
         bot = new Bot();
 
         new Version("23-10-2023", "1.0.0", """

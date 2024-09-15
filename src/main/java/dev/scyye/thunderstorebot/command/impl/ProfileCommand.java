@@ -6,9 +6,8 @@ import botcommons.commands.GenericCommandEvent;
 import botcommons.commands.Param;
 import dev.scyye.Client;
 import dev.scyye.DataObject;
-import dev.scyye.thunderstorebot.Bot;
-import dev.scyye.thunderstoreapi.api.Experimental;
 
+@SuppressWarnings("unused")
 @CommandHolder(group = "profile")
 public class ProfileCommand {
 

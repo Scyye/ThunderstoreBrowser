@@ -3,7 +3,6 @@ package dev.scyye.thunderstorebot.utils;
 import botcommons.commands.CommandInfo;
 import botcommons.commands.GenericCommandEvent;
 import botcommons.config.GuildConfig;
-import com.google.gson.Gson;
 import dev.scyye.thunderstoreapi.cache.CacheCollector;
 import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;

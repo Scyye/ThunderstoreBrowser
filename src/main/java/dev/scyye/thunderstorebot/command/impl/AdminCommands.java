@@ -6,16 +6,14 @@ import botcommons.commands.GenericCommandEvent;
 import botcommons.commands.Param;
 import botcommons.config.GuildConfig;
 import com.google.gson.Gson;
-import dev.scyye.thunderstoreapi.api.entities.community.Community;
 import dev.scyye.thunderstoreapi.cache.CacheCollector;
-import dev.scyye.thunderstorebot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 
 import java.util.*;
 
-
+@SuppressWarnings("unused")
 @CommandHolder(group = "admin")
 public class AdminCommands {
 	@Command(name = "toggle-channel", help = "Toggles the usage of the bot in a channel", permission = "MANAGE_SERVER")
