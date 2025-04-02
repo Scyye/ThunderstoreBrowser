@@ -40,6 +40,6 @@ build/
 ### OTHER ###
 /logs/
 *.log
-*-cache/
-*-assets/
+/*-cache/
+/*-assets/
 config.json
