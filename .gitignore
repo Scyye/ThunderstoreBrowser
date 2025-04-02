@@ -41,3 +41,5 @@ build/
 /logs/
 *.log
 *-cache/
+*-assets/
+config.json
