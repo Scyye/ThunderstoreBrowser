@@ -6,11 +6,12 @@ import botcommons.menu.types.PageMenu;
 import dev.scyye.thunderstoreapi.api.TSJAUtils;
 import dev.scyye.thunderstoreapi.api.entities.packages.PackageListing;
 import dev.scyye.thunderstoreapi.cache.CacheCollector;
-import dev.scyye.thunderstorebot.Bot;
+import dev.scyye.thunderstorebot.Main;
 import dev.scyye.thunderstorebot.utils.CommandUtils;
 import dev.scyye.thunderstorebot.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,7 @@ import static dev.scyye.thunderstorebot.utils.CommandUtils.*;
 @CommandHolder(group = "package")
 public class PackageCommand {
 
-	@Command(name = "info", help = "Get info about a package")
+	@Command(name = "info", help = "Get info about a package", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void info(GenericCommandEvent event,
 							@NotNull @Param(description = "The community to search", autocomplete = true) String community,
 							@NotNull @Param(description = "The UUID of the package", autocomplete = true) String uuid) {
@@ -50,7 +51,7 @@ public class PackageCommand {
 
 		PackageListing _package = null;
 		try {
-			_package = TSJAUtils.getPackageById(Bot.bot.tsja, community, UUID.fromString(uuidString));
+			_package = TSJAUtils.getPackageById(Main.instance.tsja, community, UUID.fromString(uuidString));
 		} catch (Exception ignored) {}
 
 		if (_package==null) {
@@ -113,7 +114,7 @@ public class PackageCommand {
 	}
 
 
-	@Command(name = "search", help = "Search for a package on Thunderstore")
+	@Command(name = "search", help = "Search for a package on Thunderstore", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void search(GenericCommandEvent event,
 							  @Param(description = "The community to search", autocomplete = true) String community,
 							  @Param(description = "The search to.. search", required = false, autocomplete = true) String search,
@@ -149,7 +150,7 @@ public class PackageCommand {
 		community = community.toLowerCase().replace(" ", "-");
 		community = MarkdownSanitizer.sanitize(community);
 
-		result = Arrays.stream(Bot.bot.tsja.getPackages(community, 0)).toList();
+		result = Arrays.stream(Main.instance.tsja.getPackages(community, 0)).toList();
 
 		if (!search.equals("null")) {
 			String finalSearch = search;
@@ -224,8 +225,8 @@ public class PackageCommand {
 			return buildPages(result, search, community);
 		}
 
-		private List<EmbedBuilder> buildPages(PackageListing[] result, String search, String community) {
-			List<EmbedBuilder> pages = new ArrayList<>();
+		private LinkedList<EmbedBuilder> buildPages(PackageListing[] result, String search, String community) {
+			LinkedList<EmbedBuilder> pages = new LinkedList<>();
 
 			String footer = "Community: %s".formatted(community);
 			if (!search.equals("null"))

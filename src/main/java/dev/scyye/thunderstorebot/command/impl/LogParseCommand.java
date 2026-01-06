@@ -8,6 +8,7 @@ import botcommons.menu.Menu;
 import botcommons.menu.types.PageMenu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.io.File;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 @CommandHolder(group = "logparse")
 public class LogParseCommand {
-	@Command(name = "parseinfo", help = "Parses a log file")
+	@Command(name = "parseinfo", help = "Parses a log file", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void parseInfo(GenericCommandEvent event,
 								 @Param(description = "The log file to parse") Message.Attachment attachment) {
 		FileInfo fileInfo = get(event, attachment);
@@ -53,7 +54,7 @@ public class LogParseCommand {
 		return getFileInfo(attachment.getProxy().downloadToFile(new File("thunderstorebot-assets\\logs\\%s.log".formatted(UUID.randomUUID().toString()))).join());
 	}
 
-	@Command(name = "pluginlist", help = "List all plugins")
+	@Command(name = "pluginlist", help = "List all plugins", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void pluginList(GenericCommandEvent event,
 								  @Param(description = "The attachment to parse", type = OptionType.ATTACHMENT) Message.Attachment attachment) {
 		FileInfo fileInfo = get(event, attachment);

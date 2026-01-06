@@ -2,7 +2,7 @@ package dev.scyye.thunderstorebot;
 
 import botcommons.commands.CommandManager;
 import botcommons.config.Config;
-import botcommons.config.GuildConfig;
+import botcommons.config.ConfigManager;
 import botcommons.menu.MenuManager;
 import dev.scyye.thunderstoreapi.api.TSJA;
 import dev.scyye.thunderstoreapi.api.TSJABuilder;
@@ -23,14 +23,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-public class Bot extends ListenerAdapter {
-    public static Bot bot;
+public class Main extends ListenerAdapter {
+    public static Main instance;
     public TSJA tsja;
 
     public JDA jda;
 
-    private Bot() {
-        Config.makeConfig(new HashMap<>(), "thunderstorebot");
+    private Main() {
+        instance = this;
+		Config.makeConfig(new HashMap<>(), "thunderstorebot");
 
 
         jda = JDABuilder.createDefault(Config.getInstance().get("token"))
@@ -41,14 +42,14 @@ public class Bot extends ListenerAdapter {
 
         jda.addEventListener(new MenuManager(jda));
 
-        GuildConfig.setDefault(new HashMap<>(){{
-            put("disabledChannels", "[]");
-            put("disabledUsers", "[]");
-            put("moderatorRoles", "[]");
-            put("community", "");
-        }});
+        ConfigManager manager = new ConfigManager("thunderstorebot", jda);
+        ConfigManager.Config defaultConfig = new ConfigManager.Config();
+        defaultConfig.put("disabledChannels", new String[0]);
+        defaultConfig.put("disabledUsers", new String[0]);
+        defaultConfig.put("moderatorRoles", new String[0]);
+        defaultConfig.put("community", "");
 
-        GuildConfig.init(jda);
+        manager.setDefault(defaultConfig);
 
         CommandManager.init(jda, (event -> {
             if (event.getUserId().equals(Config.getInstance().get("owner-id")))
@@ -68,8 +69,9 @@ public class Bot extends ListenerAdapter {
         MenuManager.registerMenu(new PackageCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
                 new CommunityCommand.CommunityListMenu(), new MiscCommands.ChangelogCommand());
 
-        tsja = new TSJABuilder()
-                .build();
+
+        tsja = new TSJABuilder().build($ ->
+                System.out.println("Successfully connected to Thunderstore API"));
     }
 
     @Override
@@ -82,7 +84,7 @@ public class Bot extends ListenerAdapter {
         }
 
         if (event.getReaction().getEmoji().asUnicode().equals(Emoji.fromUnicode("U+274C"))) {
-            event.getChannel().deleteMessageById(event.getMessageId()).queue(_ -> {}, _ -> System.out.println("Failed to delete message"));
+            event.getChannel().deleteMessageById(event.getMessageId()).queue($ -> {}, $ -> System.out.println("Failed to delete message"));
         }
         // if its a pin emoji, pin the message
         if (event.getReaction().getEmoji().getName().contains("\uD83D\uDCCC")) {
@@ -106,8 +108,6 @@ public class Bot extends ListenerAdapter {
     }
 
     public static void main(String[] ignoredArgs) {
-        bot = new Bot();
-
         new Version("23-10-2023", "1.0.0", """
                 * Created bot
                   * Added API commands
@@ -131,8 +131,6 @@ public class Bot extends ListenerAdapter {
                   * Added a command to change the default community
                 * Added `Root` to the credits
                 * Fixed reported issues
-                """, true);
-        new Version("29-10-2023", "1.0.3", """
                 * Updated TSJA
                 * Allowed cleaning of bot messages easily
                 * Added `Ascyst` to the credits
@@ -158,20 +156,30 @@ public class Bot extends ListenerAdapter {
                 * Security updates (thanks <@429810730691461130>)
                 * Changed community-info and community-list to subcommands of `community`
                 """ , true);
-        new Version("7-8-2024", "1.0.0", """
+        new Version("7-8-2024", "1.1.0", """
                 * General fixes
                 * Added `soup` command (blame justin)
                 * Added admin commands back
                 """, false);
-        new Version("24-8-2024", "1.0.1", """
+        new Version("24-8-2024", "1.1.1", """
                 * Fixed community autocomplete
                 * Fixed the community and package commands
                 * Added profile command
                 * General fixes
                 """, false);
-        new Version("29-8-2024", "1.0.2", """
+        new Version("29-8-2024", "1.1.2", """
                 * Updated BotCommons
                 * Use loose matching in autocomplete.
                 """, false);
+        new Version("5-1-2026", "1.2", """
+                ## KNOWN ISSUE WITH SERVER ENFORCED CHANNEL AND USER BANS
+                * USER INSTALLABLE IS HERE LETS GOOOO!!!! (thanks <@704757796599496714> for the motivation)
+                * Added `Atomic();` to the credits for helping with testing and ideas.
+                * Performance improvements, primarily with caching. (TSJA update soon:tm:)
+                * Fixed a bug with DM commands not working.
+                * Added /profile command to see info about a modpack profile.
+                * Moving to a seperate bot for beta releases, this bot will be stable releases only. after 1.3.
+                """, true);
+        new Main();
     }
 }
