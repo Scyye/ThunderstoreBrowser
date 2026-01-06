@@ -100,9 +100,10 @@ public class MiscCommands {
 		event.replySuccess("""
 				Version: %s%s
 				Release Date: %s
+				%s
 				Changelog:
 				%s
-				""".formatted(version.version, version.beta?" beta":"", version.releaseDate, version.changelog)).finish();
+				""".formatted(version.version, version.beta?" beta":"", version.releaseDate, !version.beta?"":"This is a BETA version, bugs should be expected, report any and all issues to @scyye on discord, or by joining https://discord.com/invite/P8W2kBJZWq", version.changelog)).finish();
 	}
 
 	@Command(name = "invite", help = "Generate an invite link for the bot", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
