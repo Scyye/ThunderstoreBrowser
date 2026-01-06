@@ -75,7 +75,7 @@ public class ProfileCommand {
 							.setColor(0x00ff00);
 				}
 				String packageName = MarkdownUtil.underline(p.deprecated ? "~~%s~~".formatted(p.name) : p.name);
-				String ownerLink = MarkdownUtil.maskedLink(p.owner, "https://thunderstore.io/c/%s/p/%s/".formatted(community, p.name));
+				String ownerLink = MarkdownUtil.maskedLink(p.owner, "https://thunderstore.io/c/%s/p/%s/".formatted(community, p.owner));
 				String downloadLink = MarkdownUtil.maskedLink("here", "<%s>".formatted(p.downloadUrl));
 
 				currentPage.addField(packageName, """
