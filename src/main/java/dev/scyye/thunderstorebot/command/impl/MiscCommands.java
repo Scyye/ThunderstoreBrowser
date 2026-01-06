@@ -7,6 +7,8 @@ import dev.scyye.thunderstorebot.versions.Version;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.utils.AttachedFile;
 
@@ -27,7 +29,7 @@ public class MiscCommands {
 
 	@Command(name = "echo", help = "Echoes the message", permission = "owner", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD})
 	public static void echo(GenericCommandEvent event, @Param(description = "The message to echo") String message) {
-		event.getChannel().sendMessage(message).queue();
+		event.getSlash().getChannel().sendMessage(message).queue();
 		event.replyEphemeral("Success").finish();
 	}
 

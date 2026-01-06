@@ -63,7 +63,8 @@ public class Main extends ListenerAdapter {
                 MiscCommands.class,
                 PackageCommand.class,
                 AdminCommands.class,
-                ProfileCommand.class
+                ProfileCommand.class,
+                ContextCommands.class
         );
 
         MenuManager.registerMenu(new PackageCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
@@ -179,6 +180,7 @@ public class Main extends ListenerAdapter {
                 * Fixed a bug with DM commands not working.
                 * Added /profile command to see info about a modpack profile.
                 * Moving to a seperate bot for beta releases, this bot will be stable releases only. after 1.3.
+                * Context menu commands for profile commands. Using jda-commands until BotCommons supports it.
                 """, true);
         new Main();
     }
