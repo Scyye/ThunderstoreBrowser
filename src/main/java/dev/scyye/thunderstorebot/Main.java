@@ -31,10 +31,16 @@ public class Main extends ListenerAdapter {
 
     private Main() {
         instance = this;
-		Config.makeConfig(new HashMap<>(), "thunderstorebot");
+		Config.makeConfig(new HashMap<>(){{
+            put("beta-token", "");
+            put("beta", true);
+        }}, "thunderstorebot");
 
+        String token = Config.getInstance().get("beta", Boolean.class) ?
+                Config.getInstance().get("beta-token") :
+                Config.getInstance().get("token");
 
-        jda = JDABuilder.createDefault(Config.getInstance().get("token"))
+        jda = JDABuilder.createDefault(token)
                 .setActivity(Activity.customStatus("DM suggestions to me!"))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
                 .addEventListeners(new SuggestionListener(), this)
