@@ -40,8 +40,6 @@ public class Main extends ListenerAdapter {
                 .addEventListeners(new SuggestionListener(), this)
                 .build();
 
-        jda.addEventListener(new MenuManager(jda));
-
         ConfigManager manager = new ConfigManager("thunderstorebot", jda);
         ConfigManager.Config defaultConfig = new ConfigManager.Config();
         defaultConfig.put("disabledChannels", new String[0]);
@@ -66,6 +64,8 @@ public class Main extends ListenerAdapter {
                 ProfileCommand.class,
                 ContextCommands.class
         );
+
+        MenuManager.init(jda);
 
         MenuManager.registerMenu(new PackageCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
                 new CommunityCommand.CommunityListMenu(), new MiscCommands.ChangelogCommand());

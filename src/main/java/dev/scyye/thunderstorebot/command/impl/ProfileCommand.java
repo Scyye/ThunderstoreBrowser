@@ -56,7 +56,7 @@ public class ProfileCommand {
 			if (!"null".equals(search))
 				footer += "\nSearch: %s".formatted(search);
 
-			int totalPages = Math.max(1, (result.length + 4) / 5);
+			int totalPages = Math.max(1, (result.length + 14) / 15);
 			EmbedBuilder currentPage =
 					new EmbedBuilder()
 							.setTitle("Mods Page 1/%d".formatted(totalPages))
@@ -66,7 +66,7 @@ public class ProfileCommand {
 			int onPage = 0;
 			int page = 1;
 			for (ModInfo p : result) {
-				if (onPage == 5) {
+				if (onPage == 15) {
 					onPage = 0;
 					pages.add(currentPage);
 					page = page + 1;
@@ -75,15 +75,8 @@ public class ProfileCommand {
 							.setFooter(footer)
 							.setColor(0x00ff00);
 				}
-				String packageName = MarkdownUtil.underline(p.deprecated ? "~~%s~~".formatted(p.name) : p.name);
-				String ownerLink = MarkdownUtil.maskedLink(p.owner, "https://thunderstore.io/c/%s/p/%s/".formatted(community, p.owner));
-				String downloadLink = MarkdownUtil.maskedLink("here", "<%s>".formatted(p.downloadUrl));
 
-				currentPage.addField(packageName, """
-    Page: %s
-    Created By: %s
-    Download: %s
-    """.formatted(p.packageUrl, ownerLink, downloadLink), false);
+				currentPage.appendDescription("\n"+MarkdownUtil.underline(p.deprecated ? "~~%s~~".formatted(p.name) : p.name));
 
 				onPage++;
 			}
@@ -213,6 +206,5 @@ public class ProfileCommand {
 		}
 
 		event.replyMenu("modlist-menu", new ModlistMenu(modInfos, "null", "unknown")).finish();
-		;
 	}
 }
