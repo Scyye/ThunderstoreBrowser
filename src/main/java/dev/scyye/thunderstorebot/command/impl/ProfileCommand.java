@@ -8,6 +8,7 @@ import botcommons.menu.Menu;
 import botcommons.menu.types.PageMenu;
 import dev.scyye.Client;
 import dev.scyye.DataObject;
+import kotlin.text.MatchResult;
 import kotlin.text.Regex;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
@@ -105,8 +106,9 @@ public class ProfileCommand {
 	@Command(name = "modlist", help = "Get all mods in a profile", userContext = {InteractionContextType.PRIVATE_CHANNEL, InteractionContextType.GUILD, InteractionContextType.BOT_DM})
 	public static void modList(GenericCommandEvent event, @Param(name="profile",description = "The profile to search") String profile) {
 		String message = profile;
-		Regex uuidRegex = new Regex("([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})");
-		profile = uuidRegex.find(message, 0) != null ? uuidRegex.find(message, 0).getValue() : null;
+		Regex uuidRegex = new Regex("([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})");
+		MatchResult find = uuidRegex.find(message, 0);
+		profile = find != null ? find.getValue() : null;
 
 		if (profile == null) {
 			event.replyError("No valid profile UUID provided.").finish();
