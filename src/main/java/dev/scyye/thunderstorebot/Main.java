@@ -178,7 +178,7 @@ public class Main extends ListenerAdapter {
                 * Performance improvements, primarily with caching. (TSJA update soon:tm:)
                 * Fixed a bug with DM commands not working.
                 * Added /profile command to see info about a modpack profile.
-                * Moving to a seperate bot for beta releases, this bot will be stable releases only. after 1.3.
+                * Moving to a separate bot for beta releases, this bot will be stable releases only. after 1.3.
                 """, true);
         new Main();
     }
