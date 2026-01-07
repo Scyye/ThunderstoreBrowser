@@ -188,6 +188,17 @@ public class Main extends ListenerAdapter {
                 * Moving to a separate bot for beta releases, this bot will be stable releases only. after 1.3.
                 * Context menu commands support added; Updated BotCommons.
                 """, true);
+        new Version("7-1-2026", "1.3", """
+                ## KNOWN ISSUE WITH SERVER ENFORCED CHANNEL AND USER BANS
+                * Fixed an issue with files not being created properly
+                * Added seperate bot for beta releases
+                * Fixed issues with /profile uuid option
+                * Fixed issues with links in `/profile modlist`
+                * Add argument names to all commands
+                * Updated BotCommons
+                * Added README and LICENSE to github
+                * Help command coming soon:tm:!
+                """, false);
         new Main();
     }
 }
