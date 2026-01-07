@@ -8,6 +8,7 @@ import botcommons.menu.Menu;
 import botcommons.menu.types.PageMenu;
 import dev.scyye.Client;
 import dev.scyye.DataObject;
+import kotlin.text.Regex;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
@@ -110,13 +111,21 @@ public class ProfileCommand {
 
 	@Command(name = "modlist", help = "Get all mods in a profile", userContext = {InteractionContextType.PRIVATE_CHANNEL, InteractionContextType.GUILD, InteractionContextType.BOT_DM})
 	public static void modList(GenericCommandEvent event, @Param(description = "The profile to search") String profile) {
+		String message = profile;
+		Regex uuidRegex = new Regex("([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})");
+		profile = uuidRegex.find(message, 0) != null ? uuidRegex.find(message, 0).getValue() : null;
+
+		if (profile == null) {
+			event.replyError("No valid profile UUID provided.").finish();
+			return;
+		}
 		Client client = new Client("https://thunderstore.io/api/experimental/");
 		event.deferReply();
 		// extract base64 payload after the "#r2modman\n" header and decode safely
 		String data = client.getString("legacyprofile/get/%s".formatted(profile), new DataObject());
 		final String prefix = "#r2modman\n";
 		if (!data.startsWith(prefix)) {
-			event.reply("Unexpected profile format.").finish();
+			event.replyError("Unexpected profile format.").finish();
 			return;
 		}
 
@@ -131,7 +140,7 @@ public class ProfileCommand {
 			// use the MIME decoder to tolerate line breaks in the payload
 			decoded = Base64.getMimeDecoder().decode(base64Part);
 		} catch (IllegalArgumentException ex) {
-			event.reply("Failed to decode profile data (invalid Base64).").finish();
+			event.replyError("Failed to decode profile data (invalid Base64).").finish();
 			return;
 		}
 
@@ -142,7 +151,7 @@ public class ProfileCommand {
 			os.write(decoded);
 		} catch (IOException e) {
 			e.printStackTrace();
-			event.reply("Failed to write profile zip.").finish();
+			event.replyError("Failed to write profile zip.").finish();
 			return;
 		}
 
@@ -169,7 +178,7 @@ public class ProfileCommand {
 		}
 
 		if (r2xContent == null) {
-			event.reply("Could not find export.r2x inside the profile zip.").finish();
+			event.replyError("Could not find export.r2x inside the profile zip.").finish();
 			return;
 		}
 
@@ -204,5 +213,6 @@ public class ProfileCommand {
 		}
 
 		event.replyMenu("modlist-menu", new ModlistMenu(modInfos, "null", "unknown")).finish();
+		;
 	}
 }

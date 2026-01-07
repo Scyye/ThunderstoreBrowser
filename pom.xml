@@ -29,6 +29,7 @@
                     <source>21</source>
                     <target>21</target>
                 </configuration>
+                <version>3.14.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -82,7 +83,7 @@
         <dependency>
             <groupId>dev.scyye</groupId>
             <artifactId>BotCommons</artifactId>
-            <version>1.11-quickfix-2</version>
+            <version>1.11-context-2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
     </dependencies>
