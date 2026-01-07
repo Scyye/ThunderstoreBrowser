@@ -31,16 +31,20 @@ public class Main extends ListenerAdapter {
 
     private Main() {
         instance = this;
-		Config.makeConfig(new HashMap<>(), "thunderstorebot");
+		Config.makeConfig(new HashMap<>(){{
+            put("beta-token", "");
+            put("beta", true);
+        }}, "thunderstorebot");
 
+        String token = Config.getInstance().get("beta", Boolean.class) ?
+                Config.getInstance().get("beta-token") :
+                Config.getInstance().get("token");
 
-        jda = JDABuilder.createDefault(Config.getInstance().get("token"))
+        jda = JDABuilder.createDefault(token)
                 .setActivity(Activity.customStatus("DM suggestions to me!"))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
                 .addEventListeners(new SuggestionListener(), this)
                 .build();
-
-        jda.addEventListener(new MenuManager(jda));
 
         ConfigManager manager = new ConfigManager("thunderstorebot", jda);
         ConfigManager.Config defaultConfig = new ConfigManager.Config();
@@ -66,6 +70,8 @@ public class Main extends ListenerAdapter {
                 ProfileCommand.class,
                 ContextCommands.class
         );
+
+        MenuManager.init(jda);
 
         MenuManager.registerMenu(new PackageCommand.PackageSearchMenu(), new LogParseCommand.PluginList(),
                 new CommunityCommand.CommunityListMenu(), new MiscCommands.ChangelogCommand());
@@ -182,6 +188,17 @@ public class Main extends ListenerAdapter {
                 * Moving to a separate bot for beta releases, this bot will be stable releases only. after 1.3.
                 * Context menu commands support added; Updated BotCommons.
                 """, true);
+        new Version("7-1-2026", "1.3", """
+                ## KNOWN ISSUE WITH SERVER ENFORCED CHANNEL AND USER BANS
+                * Fixed an issue with files not being created properly
+                * Added seperate bot for beta releases
+                * Fixed issues with /profile uuid option
+                * Fixed issues with links in `/profile modlist`
+                * Add argument names to all commands
+                * Updated BotCommons
+                * Added README and LICENSE to github
+                * Help command coming soon:tm:!
+                """, false);
         new Main();
     }
 }

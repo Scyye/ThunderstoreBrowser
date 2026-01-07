@@ -9,7 +9,7 @@ public class AddInviteCommand {
 
 	@Command(name = "addinvite", help = "Add an invite to the bot", permission = "owner", category = "OWNER")
 	public static void addInvite(GenericCommandEvent event,
-								 @Param(description = "The guild to get an invite to", autocomplete = true) String guild) {
+								 @Param(name="guild-id", description = "The guild to get an invite to", autocomplete = true) String guild) {
 		try {
 			String guildId = guild.split(" ")[0];
 

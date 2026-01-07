@@ -6,11 +6,11 @@
 
     <groupId>dev.scyye</groupId>
     <artifactId>ThunderstoreBrowser</artifactId>
-    <version>1.0</version>
+    <version>1.3</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -26,8 +26,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>25</source>
+                    <target>25</target>
                 </configuration>
                 <version>3.14.0</version>
             </plugin>
@@ -83,7 +83,7 @@
         <dependency>
             <groupId>dev.scyye</groupId>
             <artifactId>BotCommons</artifactId>
-            <version>1.11-context-2</version>
+            <version>1.12</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
     </dependencies>

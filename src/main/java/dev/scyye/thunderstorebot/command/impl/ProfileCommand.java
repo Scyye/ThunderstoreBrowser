@@ -8,6 +8,7 @@ import botcommons.menu.Menu;
 import botcommons.menu.types.PageMenu;
 import dev.scyye.Client;
 import dev.scyye.DataObject;
+import kotlin.text.MatchResult;
 import kotlin.text.Regex;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
@@ -56,7 +57,7 @@ public class ProfileCommand {
 			if (!"null".equals(search))
 				footer += "\nSearch: %s".formatted(search);
 
-			int totalPages = Math.max(1, (result.length + 4) / 5);
+			int totalPages = Math.max(1, (result.length + 14) / 15);
 			EmbedBuilder currentPage =
 					new EmbedBuilder()
 							.setTitle("Mods Page 1/%d".formatted(totalPages))
@@ -66,7 +67,7 @@ public class ProfileCommand {
 			int onPage = 0;
 			int page = 1;
 			for (ModInfo p : result) {
-				if (onPage == 5) {
+				if (onPage == 15) {
 					onPage = 0;
 					pages.add(currentPage);
 					page = page + 1;
@@ -75,15 +76,8 @@ public class ProfileCommand {
 							.setFooter(footer)
 							.setColor(0x00ff00);
 				}
-				String packageName = MarkdownUtil.underline(p.deprecated ? "~~%s~~".formatted(p.name) : p.name);
-				String ownerLink = MarkdownUtil.maskedLink(p.owner, "https://thunderstore.io/c/%s/p/%s/".formatted(community, p.owner));
-				String downloadLink = MarkdownUtil.maskedLink("here", "<%s>".formatted(p.downloadUrl));
 
-				currentPage.addField(packageName, """
-    Page: %s
-    Created By: %s
-    Download: %s
-    """.formatted(p.packageUrl, ownerLink, downloadLink), false);
+				currentPage.appendDescription("\n"+MarkdownUtil.underline(p.deprecated ? "~~%s~~".formatted(p.name) : p.name));
 
 				onPage++;
 			}
@@ -110,10 +104,11 @@ public class ProfileCommand {
 	}
 
 	@Command(name = "modlist", help = "Get all mods in a profile", userContext = {InteractionContextType.PRIVATE_CHANNEL, InteractionContextType.GUILD, InteractionContextType.BOT_DM})
-	public static void modList(GenericCommandEvent event, @Param(description = "The profile to search") String profile) {
+	public static void modList(GenericCommandEvent event, @Param(name="profile",description = "The profile to search") String profile) {
 		String message = profile;
-		Regex uuidRegex = new Regex("([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})");
-		profile = uuidRegex.find(message, 0) != null ? uuidRegex.find(message, 0).getValue() : null;
+		Regex uuidRegex = new Regex("([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})");
+		MatchResult find = uuidRegex.find(message, 0);
+		profile = find != null ? find.getValue() : null;
 
 		if (profile == null) {
 			event.replyError("No valid profile UUID provided.").finish();
@@ -147,6 +142,7 @@ public class ProfileCommand {
 
 
 		Path zipPath = Path.of("thunderstorebot-assets", "profiles", "%s.zip".formatted(profile));
+		zipPath.getParent().toFile().mkdirs();
 		try (OutputStream os = new BufferedOutputStream(new FileOutputStream(zipPath.toFile()))) {
 			os.write(decoded);
 		} catch (IOException e) {
@@ -213,6 +209,5 @@ public class ProfileCommand {
 		}
 
 		event.replyMenu("modlist-menu", new ModlistMenu(modInfos, "null", "unknown")).finish();
-		;
 	}
 }

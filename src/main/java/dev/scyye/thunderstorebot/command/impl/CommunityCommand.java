@@ -20,7 +20,7 @@ import java.util.List;
 public class CommunityCommand {
 	@Command(name = "info", help = "Get information about a community", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void info(GenericCommandEvent event,
-							@Param(description = "The community to get information about", autocomplete = true) String community) {
+							@Param(name="community",description = "The community to get information about", autocomplete = true) String community) {
 		Community community1 = Arrays.stream(Main.instance.tsja.getCommunities()).filter(
 				community2 -> community2.getIdentifier()
 						.equalsIgnoreCase(community)

@@ -28,8 +28,8 @@ public class PackageCommand {
 
 	@Command(name = "info", help = "Get info about a package", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void info(GenericCommandEvent event,
-							@NotNull @Param(description = "The community to search", autocomplete = true) String community,
-							@NotNull @Param(description = "The UUID of the package", autocomplete = true) String uuid) {
+							@NotNull @Param(name = "community", description = "The community to search", autocomplete = true) String community,
+							@NotNull @Param(name="uuid", description = "The UUID of the package", autocomplete = true) String uuid) {
 		event.deferReply();
 		String uuidString = uuid.split(" ")[0];
 
@@ -116,10 +116,10 @@ public class PackageCommand {
 
 	@Command(name = "search", help = "Search for a package on Thunderstore", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void search(GenericCommandEvent event,
-							  @Param(description = "The community to search", autocomplete = true) String community,
-							  @Param(description = "The search to.. search", required = false, autocomplete = true) String search,
-							  @Param(description = "Filter by the author", required = false, autocomplete = true) String author,
-							  @Param(description = "Filter by dependencies", required = false, autocomplete = true) String depends) {
+							  @Param(name = "community",description = "The community to search", autocomplete = true) String community,
+							  @Param(name = "search", description = "The search to.. search", required = false, autocomplete = true) String search,
+							  @Param(name = "author", description = "Filter by the author", required = false, autocomplete = true) String author,
+							  @Param(name = "depends", description = "Filter by dependencies", required = false, autocomplete = true) String depends) {
 		event.deferReply();
 		List<PackageListing> result;
 

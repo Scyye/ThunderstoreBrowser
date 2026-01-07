@@ -24,7 +24,7 @@ import java.util.UUID;
 public class LogParseCommand {
 	@Command(name = "parseinfo", help = "Parses a log file", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void parseInfo(GenericCommandEvent event,
-								 @Param(description = "The log file to parse") Message.Attachment attachment) {
+								 @Param(name = "attachment", description = "The log file to parse") Message.Attachment attachment) {
 		FileInfo fileInfo = get(event, attachment);
 		if (fileInfo == null) {
 			event.replyError("Failed to parse log file").finish();
@@ -56,7 +56,7 @@ public class LogParseCommand {
 
 	@Command(name = "pluginlist", help = "List all plugins", userContext = {InteractionContextType.BOT_DM, InteractionContextType.GUILD, InteractionContextType.PRIVATE_CHANNEL})
 	public static void pluginList(GenericCommandEvent event,
-								  @Param(description = "The attachment to parse", type = OptionType.ATTACHMENT) Message.Attachment attachment) {
+								  @Param(name="attachment", description = "The attachment to parse", type = OptionType.ATTACHMENT) Message.Attachment attachment) {
 		FileInfo fileInfo = get(event, attachment);
 		event.replyMenu("plugin-list", fileInfo).finish();
 	}
