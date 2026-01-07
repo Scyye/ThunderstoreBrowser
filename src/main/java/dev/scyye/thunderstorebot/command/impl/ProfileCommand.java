@@ -140,6 +140,7 @@ public class ProfileCommand {
 
 
 		Path zipPath = Path.of("thunderstorebot-assets", "profiles", "%s.zip".formatted(profile));
+		zipPath.getParent().toFile().mkdirs();
 		try (OutputStream os = new BufferedOutputStream(new FileOutputStream(zipPath.toFile()))) {
 			os.write(decoded);
 		} catch (IOException e) {
