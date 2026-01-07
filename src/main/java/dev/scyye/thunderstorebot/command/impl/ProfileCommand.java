@@ -103,7 +103,7 @@ public class ProfileCommand {
 	}
 
 	@Command(name = "modlist", help = "Get all mods in a profile", userContext = {InteractionContextType.PRIVATE_CHANNEL, InteractionContextType.GUILD, InteractionContextType.BOT_DM})
-	public static void modList(GenericCommandEvent event, @Param(description = "The profile to search") String profile) {
+	public static void modList(GenericCommandEvent event, @Param(name="profile",description = "The profile to search") String profile) {
 		String message = profile;
 		Regex uuidRegex = new Regex("([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})");
 		profile = uuidRegex.find(message, 0) != null ? uuidRegex.find(message, 0).getValue() : null;
