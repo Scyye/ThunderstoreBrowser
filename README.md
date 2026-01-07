@@ -4,7 +4,7 @@
 
 # ThunderstoreBrowser
 
-[![License](https://img.shields.io/badge/license-Not%20Yet%20Licensed-lightgrey)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-red)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.3-blue)](https://github.com/Scyye/ThunderstoreBrowser/releases)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289DA?logo=discord&logoColor=white)](https://discord.com/invite/P8W2kBJZWq)
 
